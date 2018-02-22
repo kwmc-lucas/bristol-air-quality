@@ -6,8 +6,8 @@ svg {
 #energychart svg, #chart3 svg {
 	height: 360px;
 }
-#chart4 svg {
-	height: 470px;
+#circleChart svg {
+	height: 400px;
 }
 path {
 	stroke: #777;

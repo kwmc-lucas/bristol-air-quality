@@ -62,7 +62,7 @@ d3.csv("/data/luftdaten_sds011_sensor_7675_by_weekday_and_hour.csv", function(da
 
     //    console.log("energyData.length", energyData.length);
 
-    d3.select('#chart')
+    d3.select('#circleChart')
         .selectAll('svg')
         .data([data])
         .enter()
@@ -70,12 +70,12 @@ d3.csv("/data/luftdaten_sds011_sensor_7675_by_weekday_and_hour.csv", function(da
         .call(chart);
 
         /* Add a mouseover event */
-        d3.selectAll("#chart path").on('mouseover', function() {
+        d3.selectAll("#circleChart path").on('mouseover', function() {
         	var d = d3.select(this).data()[0],
                 txt = d.dayOfWeek + ' ' + ("0" + d.hourOfDay).slice(-2) + ':00 has value ' + d[valueField];
             d3.select("#info").text(txt);
         });
-        d3.selectAll("#chart svg").on('mouseout', function() {
+        d3.selectAll("#circleChart svg").on('mouseout', function() {
             d3.select("#info").text('');
         });
 });
