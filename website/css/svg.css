@@ -15,12 +15,12 @@ path {
 }
 
 .labels {
-	fill: #aaa;
+	fill: #676767;
 	font-weight: 200;
 	letter-spacing: -1px;
 }
 .labels.segment {
-	font-size: 10px;
+	font-size: 11px;
 }
 
 #chart3 .labels {
