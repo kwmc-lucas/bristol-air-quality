@@ -9,3 +9,17 @@ $ python3 -m venv env
 # Install via pip
 $ env/bin/pip install -r requirements.txt
 ```
+
+# Process data
+TODO: there will be a script which will download data and create the visualisations.
+
+# Running the website
+```
+# Change into the website directory
+$ cd website
+
+# Start a web server, e.g.
+$ python3 -m http.server # Python 3
+# OR
+$ python -m SimpleHTTPServer # Python 2.7
+```
