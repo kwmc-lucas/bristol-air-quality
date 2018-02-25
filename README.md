@@ -22,4 +22,5 @@ $ cd website
 $ python3 -m http.server # Python 3
 # OR
 $ python -m SimpleHTTPServer # Python 2.7
+# Website should now be viewable at http://localhost:8000/
 ```
