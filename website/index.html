@@ -9,29 +9,37 @@
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/vega-tooltip@0.5.0/build/vega-tooltip.min.css">
 		<script src="https://cdn.jsdelivr.net/npm/d3@4.13.0"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vega@3.1.0/build/vega-core.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script> -->
 		<script src="https://cdn.jsdelivr.net/npm/vega-tooltip@0.5.1"></script>
 	</head>
 
 	<body>
 		<section>
-			<h1>Circular heat chart</h1>
-			<p>Shows air quality particulate readings as circular segments, coloured according to value.</p>
+			<h1>Best/worst times of the week</h1>
+			<p>
+				Shows air quality by day of the week and time of day. Each segment
+				shows average (mean) air quality particulate readings for a one hour block.
+				Red indicates the highest air pollution levels.
+			</p>
 			<div class="chart" id="circleChart"></div>
             <div id="info"></div>
 		</section>
 
 		<section>
-			<h1>24 Hour Means</h1>
-			<p>Shows air quality particulate readings as 24 hour means.</p>
+			<h1>Air quality over time</h1>
+			<p>
+				Shows air quality particulate readings as 24 hour means. Each
+				point shows the average air quality reading for the
+				24 hours preceding it. This lets us measure the air quality
+				against air quality indexes.
+			</p>
 			<div id="view"></div>
-			<div id="view2"></div>
 		</section>
 
 
-		<footer>
+		<!-- <footer>
 			<p>Built with <a href="http://d3js.org">D3</a>.</p>
-		</footer>
+		</footer> -->
 
 		<!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
 		<script src="js/libs/circularheatchart/circularHeatChartV4.js"></script>
@@ -39,5 +47,9 @@
 		<script src="js/site.js"></script>
 		<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
+		<script>
+			var sensorId = 7675;
+			luftviz.chart24hourmean.render("#view", sensorId);
+		</script>
 	</body>
 </html>
