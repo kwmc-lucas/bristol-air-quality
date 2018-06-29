@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-	    <title>Circular heat chart example</title>
+	    <title>Luftdaten Dashboard</title>
 	    <link rel="stylesheet" href="css/style.css">
 	    <link rel="stylesheet" href="css/svg.css">
 		<link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/default.min.css">
@@ -15,7 +15,13 @@
 
 	<body>
 		<section>
-			<h1>Best/worst times of the week</h1>
+			<select id="sensor-id">
+				<option value="7675">St Werburghs - Sensor 7675</option>
+			</select>
+			<h1 id="sensor-title">St Werburghs - Sensor 7675</h1>
+		</section>
+		<section>
+			<h2>Best/worst times of the week</h2>
 			<p>
 				Shows air quality by day of the week and time of day. Each segment
 				shows average (mean) air quality particulate readings for a one hour block.
@@ -26,7 +32,7 @@
 		</section>
 
 		<section>
-			<h1>Air quality over time</h1>
+			<h2>Air quality over time</h2>
 			<p>
 				Shows air quality particulate readings as 24 hour means. Each
 				point shows the average air quality reading for the
