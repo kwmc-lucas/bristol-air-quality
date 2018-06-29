@@ -1,4 +1,4 @@
-"""Processing Luftdaten data."""
+"""Process data."""
 import calendar
 
 def create_24_hour_means(raw_data, value_column, date_column):
@@ -17,7 +17,8 @@ def create_24_hour_means(raw_data, value_column, date_column):
     return df_24_hour_means
 
 def create_hourly_means_by_weekday_and_hour(raw_data, value_column, date_column):
-    """Takes raw sensor data and produces 24 hour mean for each data point.
+    """Takes raw sensor data and produces hourly mean for each each weekday
+    and hour.
 
     :param raw_data: The raw sensor data to aggregate
     :type raw_data: DataFrame

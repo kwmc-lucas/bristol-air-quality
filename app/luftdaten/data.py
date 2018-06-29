@@ -11,6 +11,10 @@ def get_luftdaten_raw_data_dir(data_dir):
     luftdaten_data_dir = os.path.join(data_dir, 'luftdaten')
     return os.path.join(luftdaten_data_dir, 'raw')
 
+def get_luftdaten_aggregated_data_dir(data_dir):
+    luftdaten_data_dir = os.path.join(data_dir, 'luftdaten')
+    return os.path.join(luftdaten_data_dir, 'aggregated')
+
 def get_luftdaten_raw_filename(sensor_code, date_):
     """Gets the filename of the sensor data file as used in the Luftdaten
     archive."""
@@ -21,8 +25,8 @@ def get_luftdaten_raw_filename(sensor_code, date_):
         sensor_code=sensor_code
     )
 
-def get_existing_raw_luftdaten_filenames(luftdaten_raw_data_dir, sensor_code):
-    """Gets a list of luftdaten filenames that have been downloaded
+def get_existing_raw_luftdaten_filepaths(luftdaten_raw_data_dir, sensor_code):
+    """Gets a list of luftdaten filepaths that have been downloaded
     previously."""
     filename_glob = luftdaten_raw_filename_pattern.format(
         year='*',
@@ -31,7 +35,15 @@ def get_existing_raw_luftdaten_filenames(luftdaten_raw_data_dir, sensor_code):
         sensor_code=sensor_code
     )
     filepath_glob = os.path.join(luftdaten_raw_data_dir, "*", filename_glob)
-    filepaths = glob.glob(filepath_glob)
+    return glob.glob(filepath_glob)
+
+def get_existing_raw_luftdaten_filenames(luftdaten_raw_data_dir, sensor_code):
+    """Gets a list of luftdaten filenames that have been downloaded
+    previously."""
+    filepaths = get_existing_raw_luftdaten_filepaths(
+        luftdaten_raw_data_dir,
+        sensor_code
+    )
     filenames = [os.path.basename(filepath) for filepath in filepaths]
     return filenames
 
