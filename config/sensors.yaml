@@ -1,0 +1,9 @@
+sensors:
+    luftdaten:
+        7675:
+            name: St Werburghs - The Yard north
+            start_date: 2018-06-27
+            # start_date: 2017-12-10
+            location:
+                latitude: 51.474708
+                longitude: -2.576841
