@@ -15,7 +15,7 @@ from data import (
 from luftdaten.sensor import get_luftdaten_sensors
 import pandas as pd
 
-value_fields = ('P1',)
+value_fields = ['P1', 'P2']
 datetime_field = 'timestamp'
 
 def load_luftdaten_sensor_data(luftdaten_raw_data_dir, sensor_code):
@@ -41,15 +41,33 @@ def load_luftdaten_sensor_data(luftdaten_raw_data_dir, sensor_code):
     return data
 
 def write_aggregated_data_files(luftdaten_aggregated_data_dir, sensor_code, data):
-    """Writes aggregated data files to disk based on the raw data for a sensor."""
-    for value_field in value_fields:
-        # 24 hour means
-        df_24_hour_means = create_24_hour_means(
-            raw_data=data,
-            value_column=value_field,
-            date_column=datetime_field
-        )
-        output_filename = 'luftdaten_sds011_sensor_{sensor_code}_24_hour_means.csv'.format(
+    """Writes aggregated data files to disk based on the raw data for a sensor.
+    Produces aggregate output for each month"""
+    # 24 hour means
+    df_24_hour_means = create_24_hour_means(
+        raw_data=data,
+        value_column=value_fields,
+        date_column=datetime_field
+    ).reset_index()
+
+    df_24_hour_means['year'] = df_24_hour_means[datetime_field].dt.year
+    df_24_hour_means['month'] = df_24_hour_means[datetime_field].dt.month
+    print(data.head())
+
+    data_24_hour_by_yearmonth = df_24_hour_means.groupby(
+        [
+            df_24_hour_means['year'],
+            df_24_hour_means['month']
+        ]
+    )
+    for (yearmonth, data_by_date) in data_24_hour_by_yearmonth:
+        year, month = yearmonth
+        print(year, month)
+
+        output_filename = '{year}_{month:02d}_sds011_sensor_' \
+            '{sensor_code}_24_hour_means.csv'.format(
+            year=year,
+            month=month,
             sensor_code=sensor_code
         )
         output_filepath = os.path.join(
@@ -58,24 +76,38 @@ def write_aggregated_data_files(luftdaten_aggregated_data_dir, sensor_code, data
             output_filename
         )
         os.makedirs(os.path.dirname(output_filepath), exist_ok=True)
-        df_24_hour_means.to_frame().to_csv(output_filepath)
+        data_by_date.to_csv(output_filepath)
 
-        # Means by day/hour
-        mean_by_weekday_and_hour = create_hourly_means_by_weekday_and_hour(
-            raw_data=data,
-            value_column=value_field,
-            date_column=datetime_field
-        )
-        output_filename = 'luftdaten_sds011_sensor_{sensor_code}_by_weekday_by_hour.csv'.format(
-            sensor_code=sensor_code
-        )
-        output_filepath = os.path.join(
-            luftdaten_aggregated_data_dir,
-            'weekday_by_hour',
-            output_filename
-        )
-        os.makedirs(os.path.dirname(output_filepath), exist_ok=True)
-        mean_by_weekday_and_hour.to_frame().to_csv(output_filepath)
+
+    data['year'] = data[datetime_field].dt.year
+    data['month'] = data[datetime_field].dt.month
+
+    data_by_yearmonth = data.groupby([data['year'], data['month']])
+    for (yearmonth, data_by_date) in data_by_yearmonth:
+        year, month = yearmonth
+        print(year, month)
+
+        raise ValueError("Merge value fields into same file")
+        for value_field in value_fields:
+
+            # Means by day/hour
+            mean_by_weekday_and_hour = create_hourly_means_by_weekday_and_hour(
+                raw_data=data_by_date,
+                value_column=value_field,
+                date_column=datetime_field
+            )
+            output_filename = '{year}_{month:02d}_sds011_sensor_{sensor_code}_by_weekday_by_hour.csv'.format(
+                year=year,
+                month=month,
+                sensor_code=sensor_code
+            )
+            output_filepath = os.path.join(
+                luftdaten_aggregated_data_dir,
+                'weekday_by_hour',
+                output_filename
+            )
+            os.makedirs(os.path.dirname(output_filepath), exist_ok=True)
+            mean_by_weekday_and_hour.to_frame().to_csv(output_filepath)
 
 if __name__ == '__main__':
     data_dir = os.path.join('..', 'data')
@@ -94,8 +126,6 @@ if __name__ == '__main__':
             luftdaten_raw_data_dir,
             sensor_code
         )
-
-        print(data.head())
 
         # Produce aggreated data files
         write_aggregated_data_files(
