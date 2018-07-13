@@ -14,7 +14,7 @@ def create_24_hour_means(raw_data, value_column, date_column):
     :rtype: DataFrame"""
     df1 = raw_data.set_index(date_column).sort_index()
     df_24_hour_means = df1[value_column].rolling('24H').mean()
-    return df_24_hour_means
+    return df_24_hour_means.reset_index()
 
 def create_hourly_means_by_weekday_and_hour(raw_data, value_column, date_column):
     """Takes raw sensor data and produces hourly mean for each each weekday
@@ -36,9 +36,6 @@ def create_hourly_means_by_weekday_and_hour(raw_data, value_column, date_column)
 
     # Group the data by day of week and hour of day
     grouped = data[value_column].groupby([data['dayOfWeek'], data['hourOfDay']])
-    # print(grouped.head())
-    # print(grouped.mean())
     mean_by_weekday_and_hour = grouped.mean()
-    # print(mean_by_weekday_and_hour)
 
-    return mean_by_weekday_and_hour
+    return mean_by_weekday_and_hour.reset_index()
