@@ -175,7 +175,7 @@ if __name__ == '__main__':
         shutil.rmtree(luftdaten_aggregated_data_dir)
 
     # Keep track of the years/months data available for each sensor
-    sensor_to_dates_json = {}
+    sensors_info = []
 
     for sensor in luftdaten_sensors:
         sensor_code = sensor.code
@@ -206,16 +206,22 @@ if __name__ == '__main__':
             str(key): val for key, val in years_months_day_of_week.items()
         }
 
-        sensor_to_dates_json[str(sensor_code)] = {
+        sensor_config = config['sensors']['luftdaten'][sensor_code]
+        sensors_info.append({
+            'code': sensor_code,
+            'name': sensor_config['name'],
             '24_hour_means': {
                 'available_dates': years_months_24_hour
             },
             'day_of_week': {
                 'available_dates': years_months_day_of_week
             }
-        }
+        })
 
     # Write a summary file
+    summary_json = {
+        'luftdaten_sensors': sensors_info
+    }
     summary_filepath = os.path.join(
         luftdaten_aggregated_data_dir,
         'sensor-summary.json'
@@ -225,4 +231,4 @@ if __name__ == '__main__':
             return int(o)
         raise TypeError
     with open(summary_filepath, 'w') as output_file:
-        json.dump(sensor_to_dates_json, output_file, default=default)
+        json.dump(summary_json, output_file, default=default)
