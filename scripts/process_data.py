@@ -132,8 +132,9 @@ if __name__ == '__main__':
     luftdaten_aggregated_data_dir = get_luftdaten_aggregated_data_dir(data_dir)
     luftdaten_sensors = get_luftdaten_sensors(config)
 
-    # Clear any old data
-    shutil.rmtree(luftdaten_aggregated_data_dir)
+    # Clear any previous runs of data
+    if os.path.exists(luftdaten_aggregated_data_dir):
+        shutil.rmtree(luftdaten_aggregated_data_dir)
 
     for sensor in luftdaten_sensors:
         sensor_code = sensor.code
