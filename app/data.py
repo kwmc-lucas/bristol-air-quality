@@ -1,6 +1,30 @@
 """Process data."""
 import calendar
 
+# def OLD_create_24_hour_means(raw_data, value_column, date_column):
+#     """Takes raw sensor data and produces 24 hour mean for each data point.
+#
+#     :param raw_data: The raw sensor data to aggregate
+#     :type raw_data: DataFrame
+#     :param value_column: Name of the column with values to aggregate
+#     :type value_column: str
+#     :param date_column: Name of the datetime column
+#     :type date_column: str
+#     :returns: DataFrame containing rolling 24 hour means
+#     :rtype: DataFrame"""
+#     # df1 = raw_data.set_index(date_column).sort_index()
+#     df1 = raw_data.copy()
+#     df1.sort_values(date_column, inplace=True)
+#     import pdb; pdb.set_trace()
+#     df_24_hour_means = df1[value_column].rolling('24H', on=date_column).mean()
+#     return df_24_hour_means.reset_index()
+
+def _ensure_data_is_valid(data, date_column):
+    """Checks whether there are any rows without a valid datetime."""
+    null_time_rows = data[data[date_column].isnull()]
+    if len(null_time_rows.index) > 0:
+        raise ValueError("There are some non null time rows in the raw data")
+
 def create_24_hour_means(raw_data, value_column, date_column):
     """Takes raw sensor data and produces 24 hour mean for each data point.
 
@@ -12,7 +36,10 @@ def create_24_hour_means(raw_data, value_column, date_column):
     :type date_column: str
     :returns: DataFrame containing rolling 24 hour means
     :rtype: DataFrame"""
+    _ensure_data_is_valid(raw_data, date_column)
+
     df1 = raw_data.set_index(date_column).sort_index()
+    # print(df1.head())
     df_24_hour_means = df1[value_column].rolling('24H').mean()
     return df_24_hour_means.reset_index()
 
@@ -28,6 +55,7 @@ def create_hourly_means_by_weekday_and_hour(raw_data, value_column, date_column)
     :type date_column: str
     :returns: DataFrame containing data grouped by day of week and hour of day
     :rtype: DataFrame"""
+    _ensure_data_is_valid(raw_data, date_column)
     data = raw_data.copy()
 
     # Add extra of columns for day of week and hour of day

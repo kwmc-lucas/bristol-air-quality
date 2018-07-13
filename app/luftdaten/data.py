@@ -88,9 +88,18 @@ def download_raw_luftdaten_files(luftdaten_raw_data_dir, sensor):
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         # logger.info("Downloading {}".format(url))
         print("Downloading {}".format(url))
-        request = requests.get(url)
-        with open(filepath, 'w') as file_:
-            file_.write(request.text)
+        reponse = requests.get(url)
+        if reponse.status_code == requests.codes.ok:
+            with open(filepath, 'w') as file_:
+                file_.write(reponse.text)
+        else:
+            print(
+                "WARNING: {url} download failed with http status code"
+                " {status_code}".format(
+                    url=url,
+                    status_code=reponse.status_code
+                )
+            )
 
     print("Downloading done")
 

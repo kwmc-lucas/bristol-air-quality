@@ -1,4 +1,4 @@
-pandas>=0.22.0
+pandas>=0.23.3
 matplotlib>=2.1.0
 PyYAML>=3.12
 requests>=2.19.1
