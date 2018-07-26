@@ -173,7 +173,7 @@ luftviz.chart24hourmean = (function (d3, vega) {
             return spec;
         },
         render = function (el, sensorId) {
-            var dataUrl = "/data/luftdaten_sds011_sensor_" + sensorId + "_24_hour_means.csv";
+            var dataUrl = "/website/data/luftdaten_sds011_sensor_" + sensorId + "_24_hour_means.csv";
             d3.csv(dataUrl, function(data) {
                 // Set data types
                 var parseDate = d3.timeParse("%Y-%m-%d %H:%M:%S");

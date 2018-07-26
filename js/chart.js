@@ -1,4 +1,4 @@
-d3.csv("/data/luftdaten_sds011_sensor_7675_by_weekday_and_hour.csv", function(data) {
+d3.csv("/website/data/luftdaten_sds011_sensor_7675_by_weekday_and_hour.csv", function(data) {
     var valueField = "P1";
 
     // Set data types
