@@ -1,6 +1,7 @@
 import sys
 sys.path.append('../app')
 
+import calendar
 from collections import defaultdict
 import json
 import os
@@ -56,6 +57,16 @@ def _add_month_year_columns(data, datetime_field):
     data['month'] = data[datetime_field].dt.month
     return data
 
+def _create_month_summary(month, filepath):
+    """Dict summary of the information about a month's data."""
+    summary_filepath = filepath[3:] \
+        if filepath.startswith('../') else filepath
+    return {
+        'month': month,
+        'month_name': calendar.month_name[month],
+        'path': summary_filepath
+    }
+
 def write_24_hour_mean_aggregated_data_files(
     luftdaten_aggregated_data_dir,
     sensor_code,
@@ -95,7 +106,8 @@ def write_24_hour_mean_aggregated_data_files(
         os.makedirs(os.path.dirname(output_filepath), exist_ok=True)
         data_by_date.to_csv(output_filepath, index=False)
 
-        years_to_months[year].append(month)
+        month_info = _create_month_summary(month, output_filepath)
+        years_to_months[year].append(month_info)
 
     return years_to_months
 
@@ -156,7 +168,8 @@ def write_aggregated_dayofweek_data_files(
         os.makedirs(os.path.dirname(output_filepath), exist_ok=True)
         mean_by_weekday_and_hour.to_csv(output_filepath, index=False)
 
-        years_to_months[year].append(month)
+        month_info = _create_month_summary(month, output_filepath)
+        years_to_months[year].append(month_info)
 
     return years_to_months
 
