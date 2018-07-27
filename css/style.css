@@ -36,3 +36,11 @@ footer {
 footer p {
 	font-size: 11px;
 }
+
+/* App styling */
+.visible {
+}
+
+.hidden {
+	display: none;
+}
