@@ -2,6 +2,27 @@
 
 var luftviz = luftviz || {};
 
+luftviz.page = (function ($) {
+    // Private
+    var populateSensors = function (el, config) {
+        // Create drop down list of sensors
+        console.log(config);
+        $(el).append($('<option>', {value: null, text: 'Please select...'}));
+
+        $.each(config.luftdaten_sensors, function (i, sensor) {
+            console.log(sensor)
+            var name = sensor.name + ' (' + sensor.code + ')',
+                code = sensor.code;
+            $(el).append($('<option>', {value: code, text: name}));
+        })
+    };
+
+    // Public
+    return {
+        populateSensors: populateSensors
+    };
+} (jQuery));
+
 luftviz.chart24hourmean = (function (d3, vega) {
     // Private properties
     var valField = "P1",
@@ -227,14 +248,14 @@ luftviz.chart24hourmean = (function (d3, vega) {
 var scale = d3.scaleBand()
     .domain([1, 2, 3])
     .range([0, 100]);
-console.log(scale(1))
-console.log(scale(2))
-console.log(scale(3))
+// console.log(scale(1))
+// console.log(scale(2))
+// console.log(scale(3))
 
 var scaleOrd = d3.scaleOrdinal()
     .domain([1, 2, 3])
     .range([d3.rgb("red"), d3.rgb("green"), d3.rgb("blue")]);
-console.log(scaleOrd(1))
-console.log(scaleOrd(1.5))
-console.log(scaleOrd(2))
-console.log(scaleOrd(3))
+// console.log(scaleOrd(1))
+// console.log(scaleOrd(1.5))
+// console.log(scaleOrd(2))
+// console.log(scaleOrd(3))

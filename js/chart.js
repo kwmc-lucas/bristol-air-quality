@@ -19,7 +19,7 @@ d3.csv("/website/data/luftdaten_sds011_sensor_7675_by_weekday_and_hour.csv", fun
     days.forEach( function (day, i) {
         daysOrder[day] = i;
     });
-    console.log(daysOrder)
+    // console.log(daysOrder)
 
     // Set segment number for each day/hour (starting from Monday 00:00)
     data.forEach(function(d) {
