@@ -15,19 +15,57 @@
 
 	<body>
 		<section>
-			<select id="sensor-id"></select>
-			<h1 id="sensor-title">St Werburghs - Sensor 7675</h1>
+			<div>
+				<a id="nav-home" class="nav-link">Home</a>
+				<a id="nav-day-of-week" class="nav-link">Day of week</a>
+				<a id="nav-over-time" class="nav-link">Air quality over time</a>
+			</div>
+		</section>
+		<section>
+			<h1 id="page-title"></h1>
+		</section>
+		<section id="sensor-choices">
+			<div>
+				<div>
+					<select id="sensor-id"></select>
+				</div>
+				<div>
+					<select id="dates-1">
+						<option>Select date...</option>
+						<option>Jan 2018</option>
+					</select>
+				</div>
+			</div>
 		</section>
 
 		<div class="main-content">
 
 			<div class="home-page page">
-				<h2>Home</h2>
-				<div id="click-me">Click me</div>
+				<p>
+					This site shows air quality based on readings
+					from Open Source sensors from Luftdaten.
+				</p>
+				<p>
+					You can compare readings from differet sensors/times
+					using the drop down boxes in the pages with visualisations.
+				</p>
 			</div>
 
 			<div class="day-of-week page">
-				<h2>Day of week</h2>
+				<p>
+					Shows air quality by day of the week and time of day. Each segment
+					shows average (mean) air quality particulate readings for a one hour block.
+					Red indicates the highest air pollution levels.
+				</p>
+			</div>
+
+			<div class="over-time page">
+				<p>
+					Shows air quality particulate readings as 24 hour means. Each
+					point shows the average air quality reading for the
+					24 hours preceding it. This lets us measure the air quality
+					against air quality indexes.
+				</p>
 			</div>
 
 			<div class="all-products page">
@@ -60,26 +98,20 @@
 		</div>
 
 		<!-- OLD -->
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
 
 		<section>
-			<h2>Best/worst times of the week</h2>
-			<p>
-				Shows air quality by day of the week and time of day. Each segment
-				shows average (mean) air quality particulate readings for a one hour block.
-				Red indicates the highest air pollution levels.
-			</p>
 			<div class="chart" id="circleChart"></div>
             <div id="info"></div>
 		</section>
 
 		<section>
-			<h2>Air quality over time</h2>
-			<p>
-				Shows air quality particulate readings as 24 hour means. Each
-				point shows the average air quality reading for the
-				24 hours preceding it. This lets us measure the air quality
-				against air quality indexes.
-			</p>
+
 			<div id="view"></div>
 		</section>
 

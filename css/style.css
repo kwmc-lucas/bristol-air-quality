@@ -44,3 +44,9 @@ footer p {
 .hidden {
 	display: none;
 }
+
+.nav-link {
+	padding: 5px;
+	border-right: 1px solid gray;
+	border-bottom: 1px solid gray;
+}

@@ -1,5 +1,8 @@
 "use strict";
 
+// Single Page App inspired by:
+// https://tutorialzine.com/2015/02/single-page-app-without-a-framework
+
 $(function () {
 
     // checkboxes.click(function () {
@@ -10,6 +13,25 @@ $(function () {
     //     createQueryHash(filters);
     // });
 
+    function getSensorsHashLocation () {
+        // Get url type hash string to represent current
+        // sensor selection state
+        let hashFragment = "sensor1=" + $('#sensor-id').val();
+        return hashFragment;
+    }
+
+    function setPageTitle (title) {
+        $('#page-title').text(title);
+    }
+
+    function hideSensorChoices () {
+        $('#sensor-choices').addClass('hidden');
+    }
+
+    function showSensorChoices () {
+        $('#sensor-choices').removeClass('hidden');
+    }
+
     $.getJSON( "/data/luftdaten/aggregated/sensor-summary.json", function( data ) {
         // Get data about our products from products.json.
 
@@ -17,10 +39,21 @@ $(function () {
         // generateAllProductsHTML(data);
         populateSensors("#sensor-id", data);
 
-        $('#click-me').click(function () {
-            var sensor1Code = $('#sensor-id').val();
-            window.location.hash = 'dayofweek/' + '5';
-        })
+        $('#nav-home').click(function () {
+            window.location.hash = '';
+        });
+
+        $('#nav-day-of-week').click(function () {
+            // var sensor1Code = $('#sensor-id').val();
+            var sensorHashFragment = getSensorsHashLocation();
+            window.location.hash = 'dayofweek/' + sensorHashFragment;
+        });
+
+        $('#nav-over-time').click(function () {
+            // var sensor1Code = $('#sensor-id').val();
+            var sensorHashFragment = getSensorsHashLocation();
+            window.location.hash = 'overtime/' + '5';
+        });
 
 
         // Manually trigger a hashchange to start the app.
@@ -43,6 +76,8 @@ $(function () {
 
         // Hide whatever page is currently shown.
         // $('.main-content .page').removeClass('visible');
+        setPageTitle("");
+        hideSensorChoices();
         $('.main-content .page').addClass('hidden');
 
         console.log("Rendering", temp)
@@ -65,6 +100,13 @@ $(function () {
                 var sensorCode1 = url.split('#dayofweek/')[1].trim();
 
                 renderDayOfWeekPage(sensorCode1);
+            },
+
+            '#overtime': function() {
+                // Get the index of which product we want to show and call the appropriate function.
+                var sensorCode1 = url.split('#overtime/')[1].trim();
+
+                renderOverTimePage(sensorCode1);
             },
 
             // Single Products page.
@@ -108,11 +150,9 @@ $(function () {
 
     function populateSensors(el, config) {
         // Create drop down list of sensors
-        console.log(config);
-        $(el).append($('<option>', {value: null, text: 'Please select...'}));
+        $(el).append($('<option>', {value: '', text: 'Select sensor...'}));
 
         $.each(config.luftdaten_sensors, function (i, sensor) {
-            console.log(sensor)
             var name = sensor.name + ' (' + sensor.code + ')',
                 code = sensor.code;
             $(el).append($('<option>', {value: code, text: name}));
@@ -126,6 +166,7 @@ $(function () {
 
     function renderHomePage(){
         // Hides and shows products in the All Products Page depending on the data it recieves.
+        setPageTitle("Home");
         var page = $('.home-page');
 
         // Show the page itself.
@@ -135,6 +176,8 @@ $(function () {
     }
 
     function renderDayOfWeekPage(sensorCode1) {
+        setPageTitle("Best/worst times of the week");
+        showSensorChoices();
         var page = $('.day-of-week');
 
         console.log(sensorCode1)
@@ -142,7 +185,19 @@ $(function () {
 
         // Show the page itself.
         // (the render function hides all pages so we need to show the one we want).
-        // page.addClass('visible');
+        page.removeClass('hidden');
+    }
+
+    function renderOverTimePage(sensorCode1) {
+        setPageTitle("Air quality over time");
+        showSensorChoices();
+        var page = $('.day-of-week');
+
+        console.log(sensorCode1)
+
+
+        // Show the page itself.
+        // (the render function hides all pages so we need to show the one we want).
         page.removeClass('hidden');
     }
 
