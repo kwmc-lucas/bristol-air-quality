@@ -9,10 +9,23 @@ var config = config || (function ($) {
         loadSpec = function (url) {
             // Return promise
             return $.getJSON(url);
+        },
+
+        getSensorConfig = function (config, sensorCode) {
+            let i;
+
+            for (i = 0; i < config.luftdaten_sensors.length; i++) {
+                if (config.luftdaten_sensors[i].code.toString() === sensorCode) {
+                    return config.luftdaten_sensors[i];
+                }
+            }
+
+            return null;
         };
 
     // Public interface
     return {
-        loadSpec: loadSpec
+        loadSpec: loadSpec,
+        getSensorConfig: getSensorConfig
     }
 } (jQuery));

@@ -20,6 +20,15 @@ $(function () {
         return hashFragment;
     }
 
+    function getDayOfWeekSensorsHashFragment () {
+        // Get url type hash fragment to represent current
+        // sensor selection state
+        return "sensor1=" +
+            $('#sensor-code-day-of-week').val() +
+            "&date1=" +
+            $('#sensor-date-day-of-week').val();
+    }
+
     function setPageTitle (title) {
         $('#page-title').text(title);
     }
@@ -32,12 +41,32 @@ $(function () {
         $('#sensor-choices').removeClass('hidden');
     }
 
-    $.getJSON( "/data/luftdaten/aggregated/sensor-summary.json", function( data ) {
+    $.getJSON( "/data/luftdaten/aggregated/sensor-summary.json", function( configData ) {
         // Get data about our products from products.json.
 
         // Call a function that will turn that data into HTML.
         // generateAllProductsHTML(data);
-        populateSensors("#sensor-id", data);
+        populateSensors('#sensor-id', configData);
+
+        $('sensor-code-day-of-week').change(function () {
+            // Fill in the date drop down for new sensor
+            // let sensorCode = this.value,
+            //     sensorConfig = config.getSensorConfig(configData, sensorCode);
+            // console.log(sensorConfig)
+            // let selectedVal = '2018-6';
+            // populate24HourMeansDates('#sensor-dates-1', sensorConfig, selectedVal);
+            let hashFragment = getDayOfWeekSensorsHashFragment();
+            window.location.hash = 'dayofweek/' + hashFragment;
+        });
+
+        $('#sensor-id').change(function () {
+            // Fill in the date drop down for new sensor
+            let sensorCode = this.value,
+                sensorConfig = config.getSensorConfig(configData, sensorCode);
+            console.log(sensorConfig)
+            let selectedVal = '2018-6';
+            populate24HourMeansDates('#sensor-dates-1', sensorConfig, selectedVal);
+        });
 
         $('#nav-home').click(function () {
             window.location.hash = '';
@@ -55,18 +84,23 @@ $(function () {
             window.location.hash = 'overtime/' + '5';
         });
 
+        $(window).on('hashchange', function(){
+            // On every hash change the render function is called with the new hash.
+            // This is how the navigation of our app happens.
+            render(decodeURI(window.location.hash), configData);
+        });
 
         // Manually trigger a hashchange to start the app.
         $(window).trigger('hashchange');
     });
 
-    $(window).on('hashchange', function(){
-        // On every hash change the render function is called with the new hash.
-        // This is how the navigation of our app happens.
-        render(decodeURI(window.location.hash));
-    });
+    // $(window).on('hashchange', function(){
+    //     // On every hash change the render function is called with the new hash.
+    //     // This is how the navigation of our app happens.
+    //     render(decodeURI(window.location.hash));
+    // });
 
-    function render(url) {
+    function render(url, config) {
         // This function decides what type of page to show
         // depending on the current url hash value.
 
@@ -97,9 +131,13 @@ $(function () {
             // Single Products page.
             '#dayofweek': function() {
                 // Get the index of which product we want to show and call the appropriate function.
-                var sensorCode1 = url.split('#dayofweek/')[1].trim();
+                var sensorCode1 = url.split('#dayofweek/')[1].trim(),
+                    date1, sensorCode2, date2;
 
-                renderDayOfWeekPage(sensorCode1);
+                sensorCode1 = '7675';
+                date1 = '2018-6';
+
+                renderDayOfWeekPage(config, sensorCode1, date1, sensorCode2, date2);
             },
 
             '#overtime': function() {
@@ -148,16 +186,89 @@ $(function () {
         }
     }
 
-    function populateSensors(el, config) {
+    function populateSensors (el, config, selectedVal) {
         // Create drop down list of sensors
         $(el).append($('<option>', {value: '', text: 'Select sensor...'}));
 
         $.each(config.luftdaten_sensors, function (i, sensor) {
             var name = sensor.name + ' (' + sensor.code + ')',
                 code = sensor.code;
-            $(el).append($('<option>', {value: code, text: name}));
-        })
+            $(el).append($('<option>', {
+                value: code,
+                text: name,
+                selected: code.toString() === selectedVal
+            }));
+        });
     };
+
+    function getMonthName(monthNumber) {
+        // Use non zero based month number, e.g. May = 5
+        const monthNames = [
+            "January", "February", "March",
+            "April", "May", "June",
+            "July", "August", "September",
+            "October", "November", "December"
+        ];
+        return monthNames[monthNumber-1];
+    }
+
+    function sortDates (listOfDates) {
+        listOfDates.sort(function (a, b) {
+            if (a.year === b.year) {
+                if (a.month < b.month)
+                    return -1;
+                if (a.month > b.month)
+                    return 1;
+                return 0;
+            } else {
+                if (a.year < b.year)
+                    return -1;
+                if (a.year > b.year)
+                    return 1;
+                return 0;
+            }
+        })
+        return listOfDates;
+    }
+
+    function populateDates (el, sensorConfig, selectedVal, dataType) {
+        // Create drop down list of dates
+        $(el).append($('<option>', {value: '', text: 'Select date...'}));
+
+        let listOfDates = [];
+        $.each(sensorConfig[dataType].available_dates, function (year, yearData) {
+            $.each(yearData, function (i, monthData) {
+                // console.log(year_i, year, i, month)
+                listOfDates.push({
+                    'year': year,
+                    'month': monthData.month
+                });
+            });
+        });
+        listOfDates = sortDates(listOfDates);
+
+        $.each(listOfDates, function (i, dateInfo) {
+            let optionVal = dateInfo.year + '-' + dateInfo.month;
+            $(el).append(
+                $(
+                    '<option>',
+                    {
+                        value: optionVal,
+                        text: getMonthName(dateInfo.month) + ' ' + dateInfo.year,
+                        selected: optionVal === selectedVal
+                    }
+                )
+            );
+        });
+    };
+
+    function populate24HourMeansDates (el, sensorConfig, selectedVal) {
+        populateDates(el, sensorConfig, selectedVal, '24_hour_means')
+    }
+
+    function populateDayOfWeekDates (el, sensorConfig, selectedVal) {
+        populateDates(el, sensorConfig, selectedVal, 'day_of_week')
+    }
 
     function generateAllProductsHTML(data){
         // Uses Handlebars to create a list of products using the provided data.
@@ -175,12 +286,30 @@ $(function () {
         page.removeClass('hidden');
     }
 
-    function renderDayOfWeekPage(sensorCode1) {
+    function renderDayOfWeekPage(configData, sensorCode1, date1, sensorCode2, date2) {
         setPageTitle("Best/worst times of the week");
         showSensorChoices();
-        var page = $('.day-of-week');
+        var page = $('.day-of-week'),
+            sensors = [
+                {code: sensorCode1, date: date1},
+                {code: sensorCode2, date: date2}
+            ];
 
         console.log(sensorCode1)
+
+        // Populate drop downs
+        $.each(sensors, function (i, sensor) {
+            let sensorCode = sensor.code,
+                dateVal = sensor.date,
+                sensorConfig = null;
+            if (sensorCode) {
+                populateSensors('#sensor-code-day-of-week', configData, sensorCode1);
+
+                console.log(configData, sensorCode)
+                sensorConfig = config.getSensorConfig(configData, sensorCode);
+                populateDayOfWeekDates('#sensor-date-day-of-week', sensorConfig, dateVal);
+            }
+        });
 
 
         // Show the page itself.
@@ -222,6 +351,7 @@ $(function () {
 
 var luftviz = luftviz || {};
 
+/*
 luftviz.page = (function ($) {
     // Private
     var populateSensors = function (el, config) {
@@ -242,6 +372,7 @@ luftviz.page = (function ($) {
         populateSensors: populateSensors
     };
 } (jQuery));
+*/
 
 luftviz.chart24hourmean = (function (d3, vega) {
     // Private properties

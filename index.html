@@ -30,9 +30,8 @@
 					<select id="sensor-id"></select>
 				</div>
 				<div>
-					<select id="dates-1">
-						<option>Select date...</option>
-						<option>Jan 2018</option>
+					<select id="sensor-dates-1">
+						<option>...</option>
 					</select>
 				</div>
 			</div>
@@ -49,9 +48,25 @@
 					You can compare readings from differet sensors/times
 					using the drop down boxes in the pages with visualisations.
 				</p>
+				<p>
+					The raw data for this site come from the Luftdaten data
+					archive http://archive.luftdaten.info
+				</p>
 			</div>
 
 			<div class="day-of-week page">
+				<section>
+					<div>
+						<div>
+							<select id="sensor-code-day-of-week"></select>
+						</div>
+						<div>
+							<select id="sensor-date-day-of-week">
+								<option>...</option>
+							</select>
+						</div>
+					</div>
+				</section>
 				<p>
 					Shows air quality by day of the week and time of day. Each segment
 					shows average (mean) air quality particulate readings for a one hour block.
@@ -132,16 +147,16 @@
 			$(document).ready(function () {
 				var sensorId = 7675;
 				luftviz.chart24hourmean.render("#view", sensorId);
-				configLoad = config.loadSpec("/data/luftdaten/aggregated/sensor-summary.json")
-					.done(function(config) {
-						// console.log( config );
-						luftviz.page.populateSensors("#sensor-id", config);
-						// luft
-					})
-					.fail(function() {
-						alert("Couldn't load config file. Have you run the data processing scripts?");
-						console.log( "Error loading config" );
-					});
+				// configLoad = config.loadSpec("/data/luftdaten/aggregated/sensor-summary.json")
+				// 	.done(function(config) {
+				// 		// console.log( config );
+				// 		luftviz.page.populateSensors("#sensor-id", config);
+				// 		// luft
+				// 	})
+				// 	.fail(function() {
+				// 		alert("Couldn't load config file. Have you run the data processing scripts?");
+				// 		console.log( "Error loading config" );
+				// 	});
 			});
 		</script>
 	</body>
