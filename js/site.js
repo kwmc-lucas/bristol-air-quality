@@ -13,6 +13,7 @@ $(function () {
     //     createQueryHash(filters);
     // });
 
+    // DEPRECATED
     function getSensorsHashLocation () {
         // Get url type hash string to represent current
         // sensor selection state
@@ -20,35 +21,76 @@ $(function () {
         return hashFragment;
     }
 
+    function getSensorsHashFragment (elSensor1, elDate1, elSensor2, elDate2) {
+        // Get url type hash fragment to represent current
+        // sensor selection state
+        return "sensor1=" + $(elSensor1).val() +
+            "&date1=" + $(elDate1).val();
+    }
+
     function getDayOfWeekSensorsHashFragment () {
         // Get url type hash fragment to represent current
         // sensor selection state
-        return "sensor1=" +
-            $('#sensor-code-day-of-week').val() +
-            "&date1=" +
-            $('#sensor-date-day-of-week').val();
+        return getSensorsHashFragment(
+            '#sensor-code-day-of-week-1',
+            '#sensor-date-day-of-week-1',
+            '#sensor-code-day-of-week-2',
+            '#sensor-date-day-of-week-2',
+        );
+    }
+
+    function getOverTimeSensorsHashFragment () {
+        // Get url type hash fragment to represent current
+        // sensor selection state
+        return getSensorsHashFragment(
+            '#sensor-code-over-time-1',
+            '#sensor-date-over-time-1',
+            '#sensor-code-over-time-2',
+            '#sensor-date-over-time-2',
+        );
+    }
+
+    function parseSensorsHashFragment (fragment) {
+        let keyValuePairs = fragment.split('&'),
+            store = {
+                sensor1: null,
+                date1: null,
+                sensor2: null,
+                date2: null
+            };
+        $.each(keyValuePairs, function (i, keyValuePair) {
+            let keyValue = keyValuePair.split('=');
+            if (keyValue.length !== 2) {
+                throw new Error("Query string key value pair not formatted correctly");
+            }
+            store[keyValue[0]] = keyValue[1] === 'null' ? null : keyValue[1];
+        });
+        console.log(store);
+        return store;
     }
 
     function setPageTitle (title) {
         $('#page-title').text(title);
     }
 
-    function hideSensorChoices () {
-        $('#sensor-choices').addClass('hidden');
-    }
+    // DEPRECATED
+    // function hideSensorChoices () {
+    //     $('#sensor-choices').addClass('hidden');
+    // }
 
-    function showSensorChoices () {
-        $('#sensor-choices').removeClass('hidden');
-    }
+    // DEPRECATED
+    // function showSensorChoices () {
+    //     $('#sensor-choices').removeClass('hidden');
+    // }
 
     $.getJSON( "/data/luftdaten/aggregated/sensor-summary.json", function( configData ) {
         // Get data about our products from products.json.
 
         // Call a function that will turn that data into HTML.
         // generateAllProductsHTML(data);
-        populateSensors('#sensor-id', configData);
+        // populateSensors('#sensor-id', configData);
 
-        $('sensor-code-day-of-week').change(function () {
+        $('#sensor-code-day-of-week-1, #sensor-date-day-of-week-1').change(function () {
             // Fill in the date drop down for new sensor
             // let sensorCode = this.value,
             //     sensorConfig = config.getSensorConfig(configData, sensorCode);
@@ -59,29 +101,35 @@ $(function () {
             window.location.hash = 'dayofweek/' + hashFragment;
         });
 
-        $('#sensor-id').change(function () {
-            // Fill in the date drop down for new sensor
-            let sensorCode = this.value,
-                sensorConfig = config.getSensorConfig(configData, sensorCode);
-            console.log(sensorConfig)
-            let selectedVal = '2018-6';
-            populate24HourMeansDates('#sensor-dates-1', sensorConfig, selectedVal);
+        $('#sensor-code-over-time-1, #sensor-date-over-time-1').change(function () {
+            let hashFragment = getOverTimeSensorsHashFragment();
+            window.location.hash = 'overtime/' + hashFragment;
         });
+
+        // $('#sensor-id').change(function () {
+        //     // Fill in the date drop down for new sensor
+        //     let sensorCode = this.value,
+        //         sensorConfig = config.getSensorConfig(configData, sensorCode);
+        //     console.log(sensorConfig)
+        //     let selectedVal = '2018-6';
+        //     populate24HourMeansDates('#sensor-dates-1', sensorConfig, selectedVal);
+        // });
 
         $('#nav-home').click(function () {
             window.location.hash = '';
         });
 
         $('#nav-day-of-week').click(function () {
-            // var sensor1Code = $('#sensor-id').val();
-            var sensorHashFragment = getSensorsHashLocation();
-            window.location.hash = 'dayofweek/' + sensorHashFragment;
+            let hashFragment = getDayOfWeekSensorsHashFragment();
+            window.location.hash = 'dayofweek/' + hashFragment;
         });
 
         $('#nav-over-time').click(function () {
+            let hashFragment = getOverTimeSensorsHashFragment();
+            window.location.hash = 'overtime/' + hashFragment;
             // var sensor1Code = $('#sensor-id').val();
-            var sensorHashFragment = getSensorsHashLocation();
-            window.location.hash = 'overtime/' + '5';
+            // var sensorHashFragment = getSensorsHashLocation();
+            // window.location.hash = 'overtime/' + '5';
         });
 
         $(window).on('hashchange', function(){
@@ -94,12 +142,6 @@ $(function () {
         $(window).trigger('hashchange');
     });
 
-    // $(window).on('hashchange', function(){
-    //     // On every hash change the render function is called with the new hash.
-    //     // This is how the navigation of our app happens.
-    //     render(decodeURI(window.location.hash));
-    // });
-
     function render(url, config) {
         // This function decides what type of page to show
         // depending on the current url hash value.
@@ -111,7 +153,7 @@ $(function () {
         // Hide whatever page is currently shown.
         // $('.main-content .page').removeClass('visible');
         setPageTitle("");
-        hideSensorChoices();
+        // hideSensorChoices();
         $('.main-content .page').addClass('hidden');
 
         console.log("Rendering", temp)
@@ -130,21 +172,29 @@ $(function () {
 
             // Single Products page.
             '#dayofweek': function() {
-                // Get the index of which product we want to show and call the appropriate function.
-                var sensorCode1 = url.split('#dayofweek/')[1].trim(),
-                    date1, sensorCode2, date2;
-
-                sensorCode1 = '7675';
-                date1 = '2018-6';
-
-                renderDayOfWeekPage(config, sensorCode1, date1, sensorCode2, date2);
+                // Get the info from url hash string and render page
+                var selectedHashFragment = url.split('#dayofweek/')[1].trim(),
+                    selectedInfo = parseSensorsHashFragment(selectedHashFragment);
+                renderDayOfWeekPage(
+                    config,
+                    selectedInfo.sensor1,
+                    selectedInfo.date1,
+                    selectedInfo.sensor2,
+                    selectedInfo.date2
+                );
             },
 
             '#overtime': function() {
-                // Get the index of which product we want to show and call the appropriate function.
-                var sensorCode1 = url.split('#overtime/')[1].trim();
-
-                renderOverTimePage(sensorCode1);
+                // Get the info from url hash string and render page
+                var selectedHashFragment = url.split('#overtime/')[1].trim(),
+                    selectedInfo = parseSensorsHashFragment(selectedHashFragment);
+                renderOverTimePage(
+                    config,
+                    selectedInfo.sensor1,
+                    selectedInfo.date1,
+                    selectedInfo.sensor2,
+                    selectedInfo.date2
+                );
             },
 
             // Single Products page.
@@ -288,42 +338,44 @@ $(function () {
 
     function renderDayOfWeekPage(configData, sensorCode1, date1, sensorCode2, date2) {
         setPageTitle("Best/worst times of the week");
-        showSensorChoices();
+        // showSensorChoices();
         var page = $('.day-of-week'),
             sensors = [
-                {code: sensorCode1, date: date1},
-                {code: sensorCode2, date: date2}
+                {id: 1, code: sensorCode1, date: date1},
+                {id: 2, code: sensorCode2, date: date2}
             ];
-
-        console.log(sensorCode1)
 
         // Populate drop downs
         $.each(sensors, function (i, sensor) {
-            let sensorCode = sensor.code,
-                dateVal = sensor.date,
-                sensorConfig = null;
-            if (sensorCode) {
-                populateSensors('#sensor-code-day-of-week', configData, sensorCode1);
-
-                console.log(configData, sensorCode)
-                sensorConfig = config.getSensorConfig(configData, sensorCode);
-                populateDayOfWeekDates('#sensor-date-day-of-week', sensorConfig, dateVal);
+            populateSensors('#sensor-code-day-of-week-' + sensor.id, configData, sensor.code);
+            if (sensor.code) {
+                let sensorConfig = config.getSensorConfig(configData, sensor.code);
+                populateDayOfWeekDates('#sensor-date-day-of-week-' + sensor.id, sensorConfig, sensor.date);
             }
         });
-
 
         // Show the page itself.
         // (the render function hides all pages so we need to show the one we want).
         page.removeClass('hidden');
     }
 
-    function renderOverTimePage(sensorCode1) {
+    function renderOverTimePage(configData, sensorCode1, date1, sensorCode2, date2) {
         setPageTitle("Air quality over time");
-        showSensorChoices();
-        var page = $('.day-of-week');
+        // showSensorChoices();
+        var page = $('.over-time'),
+            sensors = [
+                {id: 1, code: sensorCode1, date: date1},
+                {id: 2, code: sensorCode2, date: date2}
+            ];
 
-        console.log(sensorCode1)
-
+        // Populate drop downs
+        $.each(sensors, function (i, sensor) {
+            populateSensors('#sensor-code-over-time-' + sensor.id, configData, sensor.code);
+            if (sensor.code) {
+                let sensorConfig = config.getSensorConfig(configData, sensor.code);
+                populate24HourMeansDates('#sensor-date-over-time-' + sensor.id, sensorConfig, sensor.date);
+            }
+        });
 
         // Show the page itself.
         // (the render function hides all pages so we need to show the one we want).

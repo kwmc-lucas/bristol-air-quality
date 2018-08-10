@@ -24,6 +24,7 @@
 		<section>
 			<h1 id="page-title"></h1>
 		</section>
+		<!--
 		<section id="sensor-choices">
 			<div>
 				<div>
@@ -36,6 +37,7 @@
 				</div>
 			</div>
 		</section>
+		-->
 
 		<div class="main-content">
 
@@ -55,32 +57,44 @@
 			</div>
 
 			<div class="day-of-week page">
-				<section>
+				<div>
 					<div>
-						<div>
-							<select id="sensor-code-day-of-week"></select>
-						</div>
-						<div>
-							<select id="sensor-date-day-of-week">
-								<option>...</option>
-							</select>
-						</div>
+						<select id="sensor-code-day-of-week-1">
+						</select>
 					</div>
-				</section>
-				<p>
-					Shows air quality by day of the week and time of day. Each segment
-					shows average (mean) air quality particulate readings for a one hour block.
-					Red indicates the highest air pollution levels.
-				</p>
+					<div>
+						<select id="sensor-date-day-of-week-1">
+						</select>
+					</div>
+				</div>
+				<div>
+					<p>
+						Shows air quality by day of the week and time of day. Each segment
+						shows average (mean) air quality particulate readings for a one hour block.
+						Red indicates the highest air pollution levels.
+					</p>
+				</div>
 			</div>
 
 			<div class="over-time page">
-				<p>
-					Shows air quality particulate readings as 24 hour means. Each
-					point shows the average air quality reading for the
-					24 hours preceding it. This lets us measure the air quality
-					against air quality indexes.
-				</p>
+				<div>
+					<div>
+						<select id="sensor-code-over-time-1">
+						</select>
+					</div>
+					<div>
+						<select id="sensor-date-over-time-1">
+						</select>
+					</div>
+				</div>
+				<div>
+					<p>
+						Shows air quality particulate readings as 24 hour means. Each
+						point shows the average air quality reading for the
+						24 hours preceding it. This lets us measure the air quality
+						against air quality indexes.
+					</p>
+				</div>
 			</div>
 
 			<div class="all-products page">
