@@ -9,15 +9,20 @@ The project has two parts:
 This project requires Python 3. Some Python libraries need to be installed:
 ```
 # Create a virtual environment
-$ python3 -m venv env
+python3 -m venv env
 
 # Install via pip
-$ env/bin/pip install -r requirements.txt
+env/bin/pip install -r requirements.txt
 ```
 
 ## Configuring the sensors config file
 Edit the sensors.yaml file in the config directory to choose which sensors will be displayed.
 You will need to know your id numbers for your Luftdaten sensors.
+
+There doesn't seem to be an easy way of finding out when a sensor first came online (for
+the start_date attribute), it will take some browsing of the 
+[Luftdaten archives](http://archive.luftdaten.info) to see when the a file
+first appeared for the sensor.
 
 Follow the format in the YAML file, copying and pasting to create more sensors:
 ```yaml
@@ -41,16 +46,21 @@ sensors:
 This project uses data from the [Luftdaten data archives](http://archive.luftdaten.info).
 Before the website is viewable, you need to download and process the data:
 ```bash
+cd scripts
+
 # Download the data
-env/bin/python download_data.py
+../env/bin/python download_data.py
 
 # Process the data
-env/bin/python process_data.py
+../env/bin/python process_data.py
 ```
 
 ## Running the website
 After completing the steps above you'll be able to run the dashboard website:
 ```bash
+# Navigte to root directory
+cd .. # If in scripts directory
+
 # Start a web server, e.g.
 python3 -m http.server # Python 3
 # OR
