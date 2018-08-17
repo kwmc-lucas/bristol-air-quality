@@ -354,17 +354,22 @@ $(function () {
             dataUrlChart1;
         var valueField = "P1";
 
+        // Clear page
+        $('#day-of-week-chart1').empty();
+
         // Populate drop downs
         $.each(sensors, function (i, sensor) {
-            populateSensors('#sensor-code-day-of-week-' + sensor.id, configData, sensor.code);
+            var sensorSelectEl = '#sensor-code-day-of-week-' + sensor.id,
+                dateSelectEl = '#sensor-date-day-of-week-' + sensor.id;
+            $(sensorSelectEl).find('option').remove();
+            $(dateSelectEl).find('option').remove();
+            populateSensors(sensorSelectEl, configData, sensor.code);
             if (sensor.code) {
                 let sensorConfig = config.getSensorConfig(configData, sensor.code);
-                populateDayOfWeekDates('#sensor-date-day-of-week-' + sensor.id, sensorConfig, sensor.date);
+                populateDayOfWeekDates(dateSelectEl, sensorConfig, sensor.date);
             }
         });
 
-        // Show chart 1
-        $('#day-of-week-chart1').empty();
         if (sensorCode1 && date1) {
             date1Info = parseHyphenatedDate(date1)
             dataUrlChart1 = config.dayOfWeekDataUrl(configData, sensorCode1, date1Info.year, date1Info.month);
