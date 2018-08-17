@@ -1,28 +1,5 @@
 var luftviz = luftviz || {};
 
-/*
-luftviz.page = (function ($) {
-    // Private
-    var populateSensors = function (el, config) {
-        // Create drop down list of sensors
-        // console.log(config);
-        // $(el).append($('<option>', {value: null, text: 'Please select...'}));
-        //
-        // $.each(config.luftdaten_sensors, function (i, sensor) {
-        //     console.log(sensor)
-        //     var name = sensor.name + ' (' + sensor.code + ')',
-        //         code = sensor.code;
-        //     $(el).append($('<option>', {value: code, text: name}));
-        // })
-    };
-
-    // Public
-    return {
-        populateSensors: populateSensors
-    };
-} (jQuery));
-*/
-
 luftviz.chart24hourMean = (function (d3, vega) {
     // Private properties
     var dateField = "timestamp",
@@ -59,7 +36,7 @@ luftviz.chart24hourMean = (function (d3, vega) {
             minDate = minMaxDates[0];
             maxDate = minMaxDates[1];
 
-            // Create data for EU remmended limits line
+            // Create data for EU recommended limits line
             limitValues = [
                 {
                     "date": minDate,
@@ -81,11 +58,6 @@ luftviz.chart24hourMean = (function (d3, vega) {
                     {
                         "name": "table",
                         "values": data
-                        // "url": "/data/luftdaten_sds011_sensor_" + sensorId + "_24_hour_means.csv",
-                        // "format": {
-                        //     "type": "csv",
-                        //     "parse": "auto"
-                        // }
                     },
                     {
                         "name": "limitEU",
@@ -99,8 +71,6 @@ luftviz.chart24hourMean = (function (d3, vega) {
                         "type": "time",
                         "range": "width",
                         "domain": {"data": "table", "field": dateField}
-                        // "nice": true
-                        // "interval": "week", "step": 1
                     },
                     {
                         "name": "y",
@@ -114,7 +84,6 @@ luftviz.chart24hourMean = (function (d3, vega) {
                                 {"data": "limitEU", "field": "value"}
                             ]
                         }
-//                        "domain": {"data": "table", "field": valField}
                     },
                     {
                         "name": "color",
@@ -135,7 +104,6 @@ luftviz.chart24hourMean = (function (d3, vega) {
                         "orient": "bottom",
                         "scale": "x",
                         "format": dateFormat,
-                        // "format": "%-m %b %y",
                         "labelOverlap": "true"
                     },
                     {
@@ -145,24 +113,6 @@ luftviz.chart24hourMean = (function (d3, vega) {
                 ],
 
                 "marks": [
-                    // {
-                    //     "type": "line",
-                    //     "from": {"data": "table"},
-                    //     "encode": {
-                    //         "enter": {
-                    //             "x": {"scale": "x", "field": dateField},
-                    //             "y": {"scale": "y", "field": valField},
-                    //             // "stroke": {"scale": "color", "field": "c"},
-                    //             "strokeWidth": {"value": 2}
-                    //         },
-                    //         "update": {
-                    //             "fillOpacity": {"value": 1}
-                    //         },
-                    //         "hover": {
-                    //             "fillOpacity": {"value": 0.5}
-                    //         }
-                    //     }
-                    // },
                     // Sensor data
                     {
                         "type": "symbol",
@@ -172,8 +122,6 @@ luftviz.chart24hourMean = (function (d3, vega) {
                                 "x": {"scale": "x", "field": dateField},
                                 "y": {"scale": "y", "field": valField},
                                 "fill": {"value": "#4c78a8"},
-                                // "stroke": {"value": "#000"},
-                                // "strokeWidth": {"value": 1},
                                 "size": {"value": 5}
                             }
                         }
@@ -202,7 +150,6 @@ luftviz.chart24hourMean = (function (d3, vega) {
             return spec;
         },
         render = function (el, dataUrl, valueField) {
-            //var dataUrl = "/website/data/luftdaten_sds011_sensor_7675_24_hour_means.csv";
             d3.csv(dataUrl, function(data) {
                 // Set data types
                 var parseDate = d3.timeParse("%Y-%m-%d %H:%M:%S");
@@ -241,7 +188,6 @@ luftviz.dayOfWeekCircular = (function (d3) {
                     d.hourOfDay = +d.hourOfDay;
                     d[valueField] = +d[valueField];
                 });
-                // console.log(data[0]);
 
                 // The data for circular heat map list of values, one for each segment,
                 // spiraling out from the centre outwards. This means we need to order
@@ -254,7 +200,6 @@ luftviz.dayOfWeekCircular = (function (d3) {
                 days.forEach( function (day, i) {
                     daysOrder[day] = i;
                 });
-                // console.log(daysOrder)
 
                 // Set segment number for each day/hour (starting from Monday 00:00)
                 data.forEach(function(d) {
