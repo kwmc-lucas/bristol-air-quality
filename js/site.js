@@ -101,7 +101,10 @@ $(function () {
 
         // Manually trigger a hashchange to start the app.
         $(window).trigger('hashchange');
-    });
+    })
+        .fail(function() {
+            alert("Couldn't find the sensor config file. Make sure you've run the Python scripts to generate the data.");
+        });
 
     function render(url, config) {
         // This function decides what type of page to show
