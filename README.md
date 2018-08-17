@@ -44,7 +44,9 @@ sensors:
 
 ## Preparing the data
 This project uses data from the [Luftdaten data archives](http://archive.luftdaten.info).
-Before the website is viewable, you need to download and process the data:
+It fetches data based on the sensors listed in the config file (see above).
+
+Before the dashboard website is viewable, you need to download and process the data:
 ```bash
 cd scripts
 
@@ -53,23 +55,21 @@ cd scripts
 
 # Process the data
 ../env/bin/python process_data.py
+
+# Return to the top level directory
+cd ..
 ```
 
 ## Running the website
 After completing the steps above you'll be able to run the dashboard website:
 ```bash
-# Navigte to root directory
-cd .. # If in scripts directory
-
-# Start a web server, e.g.
-python3 -m http.server # Python 3
-# OR
-python -m SimpleHTTPServer # Python 2.7
+# Start a local web server from the top level directory, e.g:
+python3 -m http.server
 # Website should now be viewable at http://localhost:8000/
 ```
 
 ## Updating the data
-You will to run the scripts in the 'Preparing the data' section above to update the data.
+You will need to run the scripts in the 'Preparing the data' section above to update the data.
 
 The scripts will only download new data to minimalize the impact on Luftdaten's servers.
  
