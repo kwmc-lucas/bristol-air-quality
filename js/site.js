@@ -352,6 +352,7 @@ $(function () {
             ],
             date1Info,
             dataUrlChart1;
+        var valueField = "P1";
 
         // Populate drop downs
         $.each(sensors, function (i, sensor) {
@@ -363,11 +364,12 @@ $(function () {
         });
 
         // Show chart 1
+        $('#day-of-week-chart1').empty();
         if (sensorCode1 && date1) {
             date1Info = parseHyphenatedDate(date1)
             dataUrlChart1 = config.dayOfWeekDataUrl(configData, sensorCode1, date1Info.year, date1Info.month);
             console.log(dataUrlChart1);
-            luftviz.dayOfWeekCircular.render("#day-of-week-chart1", dataUrlChart1);
+            luftviz.dayOfWeekCircular.render('#day-of-week-chart1', dataUrlChart1, valueField);
         }
 
         // Show the page itself.

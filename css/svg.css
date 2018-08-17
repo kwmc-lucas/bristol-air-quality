@@ -9,6 +9,9 @@ svg {
 #circleChart svg {
 	height: 400px;
 }
+.circle-chart svg {
+	height: 400px;
+}
 path {
 	stroke: #777;
 	stroke-width: 0.1px;

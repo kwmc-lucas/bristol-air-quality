@@ -221,19 +221,16 @@ luftviz.chart24hourmean = (function (d3, vega) {
 
 luftviz.dayOfWeekCircular = (function (d3) {
     // Private properties
-    var valueField = "P1",
-        dateField = "timestamp",
+    var dateField = "timestamp",
         dateFormat = "%-d %b %y",
 
         // Private methods
-        render = function (el, dataUrl) {
+        render = function (el, dataUrl, valueField) {
             d3.csv(dataUrl, function(data) {
-                var valueField = "P1";
-
                 // Set data types
                 data.forEach(function(d) {
                     d.hourOfDay = +d.hourOfDay;
-                    d.P1 = +d.P1;
+                    d[valueField] = +d[valueField];
                 });
                 // console.log(data[0]);
 
