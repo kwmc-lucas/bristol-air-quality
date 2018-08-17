@@ -171,7 +171,7 @@ luftviz.chart24hourMean = (function (d3, vega) {
                             "enter": {
                                 "x": {"scale": "x", "field": dateField},
                                 "y": {"scale": "y", "field": valField},
-                                "fill": {"value": "#ff0000"},
+                                "fill": {"value": "#4c78a8"},
                                 // "stroke": {"value": "#000"},
                                 // "strokeWidth": {"value": 1},
                                 "size": {"value": 5}
@@ -186,7 +186,7 @@ luftviz.chart24hourMean = (function (d3, vega) {
                             "enter": {
                                 "x": {"scale": "x", "field": "date"},
                                 "y": {"scale": "y", "field": "value"},
-                                // "stroke": {"scale": "color", "field": "c"},
+                                "stroke": {"value": "#ff0000"},
                                 "strokeWidth": {"value": 2}
                             },
                             "update": {
