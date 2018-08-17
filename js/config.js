@@ -34,12 +34,25 @@ var config = config || (function ($) {
                 }
             }
             return url;
+        },
+        twentyFourHourMeansDataUrl = function (config, sensorCode, year, month) {
+            let sensorConfig = getSensorConfig(config, sensorCode),
+                datesInfo = sensorConfig['24_hour_means'].available_dates[year.toString()],
+                url = null, i;
+            for (i = 0; i < datesInfo.length; i++) {
+                if (datesInfo[i].month.toString() === month.toString()) {
+                    url = datesInfo[i].path;
+                    break;
+                }
+            }
+            return url;
         };
 
     // Public interface
     return {
         loadSpec: loadSpec,
         getSensorConfig: getSensorConfig,
-        dayOfWeekDataUrl: dayOfWeekDataUrl
+        dayOfWeekDataUrl: dayOfWeekDataUrl,
+        twentyFourHourMeansDataUrl: twentyFourHourMeansDataUrl
     }
 } (jQuery));

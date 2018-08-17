@@ -23,32 +23,34 @@ luftviz.page = (function ($) {
 } (jQuery));
 */
 
-luftviz.chart24hourmean = (function (d3, vega) {
+luftviz.chart24hourMean = (function (d3, vega) {
     // Private properties
-    var valField = "P1",
-        dateField = "timestamp",
+    var dateField = "timestamp",
         dateFormat = "%-d %b %y",
         euLimitPM10 = 50,
         euLimitPM2point5 = 50,
-        vegaTooltipOptions = {
-            showAllFields: false,
-            fields: [
-                {
-                    field: dateField,
-                    title: "Date",
-                    formatType: "time",
-                    format: dateFormat + " %H:%M"
-                },
-                {
-                    field: valField,
-                    title: "Val"
-                }
 
-            ]
+        createVegaTooltipOptions = function (valField) {
+            return {
+                showAllFields: false,
+                fields: [
+                    {
+                        field: dateField,
+                        title: "Date",
+                        formatType: "time",
+                        format: dateFormat + " %H:%M"
+                    },
+                    {
+                        field: valField,
+                        title: "Val"
+                    }
+
+                ]
+            }
         },
 
         // Private methods
-        createSpec = function (sensorId, data, valField, dateField) {
+        createSpec = function (data, valField, dateField) {
             // Creates a vega spec
             var minMaxDates, minDate, maxDate, limitValues;
 
@@ -106,7 +108,13 @@ luftviz.chart24hourmean = (function (d3, vega) {
                         "range": "height",
                         "nice": true,
                         "zero": true,
-                        "domain": {"data": "table", "field": valField}
+                        "domain": {
+                            "fields": [
+                                {"data": "table", "field": valField},
+                                {"data": "limitEU", "field": "value"}
+                            ]
+                        }
+//                        "domain": {"data": "table", "field": valField}
                     },
                     {
                         "name": "color",
@@ -193,17 +201,18 @@ luftviz.chart24hourmean = (function (d3, vega) {
             };
             return spec;
         },
-        render = function (el, sensorId) {
-            var dataUrl = "/website/data/luftdaten_sds011_sensor_" + sensorId + "_24_hour_means.csv";
+        render = function (el, dataUrl, valueField) {
+            //var dataUrl = "/website/data/luftdaten_sds011_sensor_7675_24_hour_means.csv";
             d3.csv(dataUrl, function(data) {
                 // Set data types
                 var parseDate = d3.timeParse("%Y-%m-%d %H:%M:%S");
                 data.forEach(function(d) {
                     d[dateField] = parseDate(d[dateField]);
-                    d.P1 = +d.P1;
+                    d[valueField] = +d[valueField];
                 });
 
-                var specCopy = createSpec(sensorId, data, valField, dateField),
+                var specCopy = createSpec(data, valueField, dateField),
+                    vegaTooltipOptions = createVegaTooltipOptions(valueField),
                     view = new vega.View(vega.parse(specCopy))
                         .renderer('canvas')  // set renderer (canvas or svg)
                         .initialize(el) // initialize view within parent DOM container
