@@ -50,7 +50,7 @@ luftviz.chart24hourMean = (function (d3, vega) {
 
             var spec = {
                 "$schema": "https://vega.github.io/schema/vega/v3.json",
-                "width": 500,
+                "width": 400,
                 "height": 200,
                 "padding": 5,
 
@@ -149,24 +149,36 @@ luftviz.chart24hourMean = (function (d3, vega) {
             };
             return spec;
         },
-        render = function (el, dataUrl, valueField) {
-            d3.csv(dataUrl, function(data) {
-                // Set data types
-                var parseDate = d3.timeParse("%Y-%m-%d %H:%M:%S");
-                data.forEach(function(d) {
-                    d[dateField] = parseDate(d[dateField]);
-                    d[valueField] = +d[valueField];
-                });
+        render = function (el, data, valueField, options) {
+            var specCopy = createSpec(data, valueField, dateField),
+                vegaTooltipOptions,
+                view;
 
-                var specCopy = createSpec(data, valueField, dateField),
-                    vegaTooltipOptions = createVegaTooltipOptions(valueField),
-                    view = new vega.View(vega.parse(specCopy))
-                        .renderer('canvas')  // set renderer (canvas or svg)
-                        .initialize(el) // initialize view within parent DOM container
-                        .hover()             // enable hover encode set processing
-                        .run();
-                vegaTooltip.vega(view, vegaTooltipOptions);
-            });
+            if (options) {
+                if (options.domain) {
+                    // TODO: Set Y axis domain
+                    // TODO: Pass in benchmarks/limits so they can be factored in to domain
+                }
+            }
+
+            vegaTooltipOptions = createVegaTooltipOptions(valueField),
+            view = new vega.View(vega.parse(specCopy))
+                .renderer('canvas')  // set renderer (canvas or svg)
+                .initialize(el) // initialize view within parent DOM container
+                .hover()             // enable hover encode set processing
+                .run();
+            vegaTooltip.vega(view, vegaTooltipOptions);
+
+//            d3.csv(dataUrl, function(data) {
+//                // Set data types
+//                var parseDate = d3.timeParse("%Y-%m-%d %H:%M:%S");
+//                data.forEach(function(d) {
+//                    d[dateField] = parseDate(d[dateField]);
+//                    d[valueField] = +d[valueField];
+//                });
+//
+//
+//            });
         };
 
     // Public interface
@@ -220,7 +232,7 @@ luftviz.dayOfWeekCircular = (function (d3) {
                     .numSegments(24)
                     .radialLabels(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
                     .segmentLabels(["Midnight", "1am", "2am", "3am", "4am", "5am", "6am", "7am", "8am", "9am", "10am", "11am", "Midday", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm"])
-                    .margin({top: 20, right: 0, bottom: 20, left: 280});
+                    .margin({top: 20, right: 20, bottom: 20, left: 20});
 
                 d3.select(el)
                     .selectAll('svg')

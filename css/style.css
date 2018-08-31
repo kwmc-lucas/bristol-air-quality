@@ -50,3 +50,16 @@ footer p {
 	border-right: 1px solid gray;
 	border-bottom: 1px solid gray;
 }
+
+.column {
+    float: left;
+    width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+

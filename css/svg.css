@@ -1,7 +1,10 @@
 /* SVG styling */
 svg {
-	width: 960px;
+	width: 400px;
 	height: 300px;
+
+	/*width: 960px;
+	height: 300px;*/
 }
 #energychart svg, #chart3 svg {
 	height: 360px;
