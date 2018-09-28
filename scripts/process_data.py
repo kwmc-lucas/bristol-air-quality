@@ -198,7 +198,7 @@ if __name__ == '__main__':
             sensor_code
         )
 
-        # Produce aggreated data files
+        # Produce aggregated data files
         years_months_day_of_week = write_aggregated_dayofweek_data_files(
             luftdaten_aggregated_data_dir,
             sensor_code,
@@ -239,9 +239,11 @@ if __name__ == '__main__':
         luftdaten_aggregated_data_dir,
         'sensor-summary.json'
     )
+
     def default(o):
         if isinstance(o, numpy.int64):
             return int(o)
         raise TypeError
+
     with open(summary_filepath, 'w') as output_file:
         json.dump(summary_json, output_file, default=default)
