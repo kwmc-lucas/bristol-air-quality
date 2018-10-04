@@ -1,7 +1,9 @@
 from sensor import Sensor
 from location import LatLongLocation
 
+
 def get_luftdaten_sensors(config):
+    """Get Luftdaten sensor inform from config"""
     luftdaten_sensors = config['sensors']['luftdaten']
 
     sensors = []

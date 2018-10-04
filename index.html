@@ -41,16 +41,32 @@
 			</div>
 
 			<div class="day-of-week page">
-				<div>
-					<div>
-						<select id="sensor-code-day-of-week-1">
-						</select>
+
+				<!-- Drop downs -->
+				<div class="row">
+					<div class="column">
+						<div>
+							<select id="sensor-code-day-of-week-1">
+							</select>
+						</div>
+						<div>
+							<select id="sensor-date-day-of-week-1">
+							</select>
+						</div>
 					</div>
-					<div>
-						<select id="sensor-date-day-of-week-1">
-						</select>
+					<div class="column">
+						<div>
+							<select id="sensor-code-day-of-week-2">
+							</select>
+						</div>
+						<div>
+							<select id="sensor-date-day-of-week-2">
+							</select>
+						</div>
 					</div>
 				</div>
+
+				<!-- Explanation text -->
 				<div>
 					<p>
 						Shows air quality by day of the week and time of day. Each segment
@@ -58,23 +74,47 @@
 						Red indicates the highest air pollution levels.
 					</p>
 				</div>
-				<div>
-					<div class="circle-chart" id="day-of-week-chart-1"></div>
-					<div id="info"></div>
+
+				<!-- Charts -->
+				<div class="row">
+					<div class="column">
+						<div class="circle-chart" id="day-of-week-chart-1"></div>
+						<div id="info"></div>
+					</div>
+					<div>
+						<div class="circle-chart" id="day-of-week-chart-2"></div>
+						<div id="info2"></div>
+					</div>
 				</div>
 			</div>
 
 			<div class="over-time page">
-				<div>
-					<div>
-						<select id="sensor-code-over-time-1">
-						</select>
+
+				<!-- Drop downs -->
+				<div class="row">
+					<div class="column">
+						<div>
+							<select id="sensor-code-over-time-1">
+							</select>
+						</div>
+						<div>
+							<select id="sensor-date-over-time-1">
+							</select>
+						</div>
 					</div>
-					<div>
-						<select id="sensor-date-over-time-1">
-						</select>
+					<div class="column">
+						<div>
+							<select id="sensor-code-over-time-2">
+							</select>
+						</div>
+						<div>
+							<select id="sensor-date-over-time-2">
+							</select>
+						</div>
 					</div>
 				</div>
+
+				<!-- Explanation text -->
 				<div>
 					<p>
 						Shows air quality particulate readings as 24 hour means. Each
@@ -83,8 +123,15 @@
 						against air quality indexes.
 					</p>
 				</div>
-				<div>
-					<div id="twentyfour-hour-means-chart-1"></div>
+
+				<!-- Charts -->
+				<div class="row">
+					<div class="column">
+						<div id="twentyfour-hour-means-chart-1"></div>
+					</div>
+					<div class="column">
+						<div id="twentyfour-hour-means-chart-2"></div>
+					</div>
 				</div>
 			</div>
 

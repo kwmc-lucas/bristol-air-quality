@@ -9,7 +9,9 @@ $(function () {
         // Get url type hash fragment to represent current
         // sensor selection state
         return "sensor1=" + $(elSensor1).val() +
-            "&date1=" + $(elDate1).val();
+            "&date1=" + $(elDate1).val() +
+            "&sensor2=" + $(elSensor2).val() +
+            "&date2=" + $(elDate2).val();
     }
 
     function getDayOfWeekSensorsHashFragment () {
@@ -66,15 +68,32 @@ $(function () {
         return {year: parts[0], month: parts[1]};
     }
 
+    function cleanData(data, dateField, valueField) {
+        // Cleans the data by setting data types
+        // Note: mutates data
+        var parseDate = d3.timeParse("%Y-%m-%d %H:%M:%S");
+        data.forEach(function(d) {
+            d[dateField] = parseDate(d[dateField]);
+            d[valueField] = +d[valueField];
+        });
+        return data;
+    }
+
     $.getJSON( "/data/luftdaten/aggregated/sensor-summary.json", function( configData ) {
         // Get data about sensors from sensor-summary.json.
 
-        $('#sensor-code-day-of-week-1, #sensor-date-day-of-week-1').change(function () {
+        $(
+            '#sensor-code-day-of-week-1, #sensor-date-day-of-week-1, ' +
+            '#sensor-code-day-of-week-2, #sensor-date-day-of-week-2'
+        ).change(function () {
             let hashFragment = getDayOfWeekSensorsHashFragment();
             window.location.hash = 'dayofweek/' + hashFragment;
         });
 
-        $('#sensor-code-over-time-1, #sensor-date-over-time-1').change(function () {
+        $(
+            '#sensor-code-over-time-1, #sensor-date-over-time-1, ' +
+            '#sensor-code-over-time-2, #sensor-date-over-time-2'
+        ).change(function () {
             let hashFragment = getOverTimeSensorsHashFragment();
             window.location.hash = 'overtime/' + hashFragment;
         });
@@ -368,7 +387,8 @@ $(function () {
                 '24_hour_means');
         });
 
-        // Display charts
+        // Prepare data download
+        var queue = d3.queue();
         $.each(sensors, function (i, sensor) {
             var chartEl = '#twentyfour-hour-means-chart-' + sensor.id,
                 dateInfo, dataUrl;
@@ -376,10 +396,50 @@ $(function () {
             if (sensor.isActive) {
                 dateInfo = parseHyphenatedDate(sensor.date);
                 dataUrl = config.twentyFourHourMeansDataUrl(configData, sensor.code, dateInfo.year, dateInfo.month);
-                console.log(dataUrl);
-                luftviz.chart24hourMean.render(chartEl, dataUrl, valueField);
+//                luftviz.chart24hourMean.render(chartEl, dataUrl, valueField);
+                queue.defer(d3.csv, dataUrl);
             } else {
                 $(chartEl).text('[Select sensor and date above]');
+            }
+        });
+
+        // Get data and draw chart
+        queue.await(function(error) {
+            var dataArgs = [],
+                dateField = "timestamp",
+                data, argIndex, maxValue;
+            if (error) {
+                console.error('Something went wrong when fetching data. ' + error);
+            }
+            else {
+                // Call succeeded, get loaded datasets from d3.queue.await() callback
+                for (argIndex = 1; argIndex < arguments.length; argIndex++) {
+                    data = arguments[argIndex];
+                    data = cleanData(data, dateField, valueField);
+                    dataArgs.push(data);
+                }
+
+                maxValue = d3.max(dataArgs, function(array) {
+                    return d3.max(array, function (d) {return d[valueField]});
+                });
+
+                $.each(sensors, function (i, sensor) {
+                    var chartEl = '#twentyfour-hour-means-chart-' + sensor.id,
+                        data;
+                    if (sensor.isActive) {
+                        // Display chart
+                        data = dataArgs.shift();
+                        console.log("ARG", maxValue, chartEl, data, valueField);
+                        luftviz.chart24hourMean.render(
+                            chartEl,
+                            data,
+                            valueField,
+                            {
+                                domain: [0, maxValue]
+                            }
+                        );
+                    }
+                });
             }
         });
 
