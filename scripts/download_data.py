@@ -1,6 +1,7 @@
 import os
 import sys
 sys.path.append('../app')
+
 from config import get_config
 from luftdaten.data import download_luftdaten_data, get_luftdaten_raw_data_dir
 from luftdaten.sensor import get_luftdaten_sensors

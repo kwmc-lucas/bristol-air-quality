@@ -22,7 +22,7 @@ def get_luftdaten_aggregated_data_dir(data_dir):
 
 
 def get_luftdaten_raw_filename(sensor_code, date_):
-    """Gets the filename of the sensor data file as used in the Luftdaten
+    """Get the filename of the sensor data file as used in the Luftdaten
     archive."""
     return luftdaten_raw_filename_pattern.format(
         year=date_.year,
@@ -30,6 +30,98 @@ def get_luftdaten_raw_filename(sensor_code, date_):
         day="{:02d}".format(date_.day),
         sensor_code=sensor_code
     )
+
+
+def get_luftdaten_data_url(sensor_code, date_):
+    """Get the url of the data in Luftdaten archive"""
+    filename = get_luftdaten_raw_filename(sensor_code, date_)
+    date_str = filename.split('_')[0]
+    return "http://archive.luftdaten.info/{date}/{filename}".format(
+        date=date_str,
+        filename=filename
+    )
+
+
+def find_start_date_for_sensor(sensor_code, earliest_date=None, latest_date=None, date_has_data_cache=None):
+    """Finds the date for which data was first available in Luftdaten archives.
+
+    Recursive function.
+    Note: does a sparse search so might not find first data where sensor is available intermittently.
+
+    :param sensor_code: The sensor code, as used by Luftdaten archives
+    :param earliest_date: The earliest date with data so far
+    :param latest_date: The latest date with data so far
+    :param date_has_data_cache: Dict of dates to boolean to determine whether date has data
+        (saves redundant calls to api)"""
+    earliest_date = earliest_date or datetime.date(2015, 10, 1)
+    latest_date = latest_date or datetime.date.today()
+    date_has_data_cache = date_has_data_cache or {}
+    print(f"Searching between {earliest_date} and {latest_date}")
+
+    # Find a distribution of dates between earliest/latest to check
+    # Sometimes a sensor will go offline for day or two so worth checking
+    # a spread of dates
+    days_diff = (latest_date - earliest_date).days
+    # print("no", sensor_code, days_diff)
+
+    dates_to_check = []
+    if days_diff == 0:
+        dates_to_check.append(earliest_date)
+    if days_diff == 1:
+        dates_to_check.append(earliest_date)
+        dates_to_check.append(latest_date)
+    else:
+        for day_offset in range(0, days_diff, min(days_diff, int(days_diff / 5))):
+            dates_to_check.append(earliest_date + datetime.timedelta(days=day_offset))
+    if dates_to_check[-1] != latest_date:
+        dates_to_check.append(latest_date)
+
+    assert len(dates_to_check) == len(set(dates_to_check))
+
+    date_has_data = {}
+    for date_ in dates_to_check:
+        if date_ in date_has_data_cache:
+            date_has_data[date_] = date_has_data_cache[date_]
+        else:
+            url = get_luftdaten_data_url(sensor_code, date_)
+            print("Checking {}".format(url))
+            response = requests.get(url)
+            date_has_data[date_] = response.status_code < 400
+            date_has_data_cache[date_] = date_has_data[date_]
+    # print(dates_to_check)
+    # print(date_has_data)
+
+    if date_has_data[earliest_date]:
+        # Earliest date has data, so we have our answer
+        return earliest_date
+    elif True not in date_has_data.values():
+        # None of dates had data so we don't know when earliest period was
+        return None
+    elif len(dates_to_check) == 2:
+        # Down to two dates - check which one has the data
+        if date_has_data[dates_to_check[0]]:
+            # Earliest date has data
+            return dates_to_check[0]
+        elif date_has_data[dates_to_check[1]]:
+            # Latest date has data
+            return dates_to_check[1]
+        raise RuntimeError("Processing shouldn't get here")
+    else:
+        # Narrow down search
+        last_date_with_missing_data = earliest_date
+        for date_ in dates_to_check:
+            if date_has_data[date_]:
+                # We have a latest date for data, and a previous date without
+                # data, so narrow down the search between the two
+                return find_start_date_for_sensor(
+                    sensor_code,
+                    earliest_date=last_date_with_missing_data,
+                    latest_date=date_,
+                    date_has_data_cache=date_has_data_cache
+                )
+            last_date_with_missing_data = date_
+
+        raise RuntimeError("Shouldn't get here")
 
 
 def get_existing_raw_luftdaten_filepaths(luftdaten_raw_data_dir, sensor_code):
