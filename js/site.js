@@ -79,7 +79,7 @@ $(function () {
         return data;
     }
 
-    $.getJSON( "/data/luftdaten/aggregated/sensor-summary.json", function( configData ) {
+    $.getJSON( "data/luftdaten/aggregated/sensor-summary.json", function( configData ) {
         // Get data about sensors from sensor-summary.json.
 
         $(
