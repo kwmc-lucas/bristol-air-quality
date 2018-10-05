@@ -156,8 +156,17 @@ luftviz.chart24hourMean = (function (d3, vega) {
 
             if (options) {
                 if (options.domain) {
+                    let domain, yScales;
                     // TODO: Set Y axis domain
                     // TODO: Pass in benchmarks/limits so they can be factored in to domain
+                    domain = options.domain;
+                    domain[1] = Math.max(domain[1], euLimitPM2point5, euLimitPM10);
+                    yScales = specCopy.scales.filter(function (item) {
+                        return item.name === 'y';
+                    });
+                    if (yScales.length > 0) {
+                        yScales[0].domain = domain;
+                    }
                 }
             }
 
@@ -227,6 +236,8 @@ luftviz.dayOfWeekCircular = (function (d3) {
 
                 var chart = circularHeatChart()
                     .accessor(function(d) {return d[valueField];})
+                    // TODO: change based on PM2.5 or PM10
+                    .domain([0, 50])
                     .segmentHeight(20)
                     .innerRadius(20)
                     .numSegments(24)
@@ -244,13 +255,82 @@ luftviz.dayOfWeekCircular = (function (d3) {
                     /* Add a mouseover event */
                     d3.selectAll(el + " path").on('mouseover', function() {
                     	var d = d3.select(this).data()[0],
-                            txt = d.dayOfWeek + ' ' + ("0" + d.hourOfDay).slice(-2) + ':00 has value ' + d[valueField];
+                            txt = d.dayOfWeek + ' ' +
+                                ("0" + d.hourOfDay).slice(-2) + ':00 value: ' +
+                                (!isNaN(d[valueField]) ? d[valueField].toFixed(1) : d[valueField]);
                         d3.select("#info").text(txt);
                     });
                     d3.selectAll(el + " svg").on('mouseout', function() {
                         d3.select("#info").text('');
                     });
             });
+        };
+
+    // Public interface
+    return {
+        render: render
+    }
+} (d3));
+
+luftviz.legendColorGradient = (function (d3) {
+    // Private properties
+    var dateField = "timestamp",
+        dateFormat = "%-d %b %y",
+
+        // Private methods
+        render = function (el, domain, startColor, endColor) {
+            var w = 300, h = 50;
+
+            d3.select(el).select("svg").remove();
+
+            var key = d3.select(el)
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+            var legend = key.append("defs")
+                .append("svg:linearGradient")
+                .attr("id", "gradient")
+                .attr("x1", "0%")
+                .attr("y1", "100%")
+                .attr("x2", "100%")
+                .attr("y2", "100%")
+                .attr("spreadMethod", "pad");
+
+            legend.append("stop")
+                .attr("offset", "0%")
+                .attr("stop-color", startColor)
+                .attr("stop-opacity", 1);
+
+            legend.append("stop")
+                .attr("offset", "100%")
+                .attr("stop-color", endColor)
+                .attr("stop-opacity", 1);
+
+            key.append("rect")
+                .attr("width", w)
+                .attr("height", h - 30)
+                .style("fill", "url(#gradient)")
+                .attr("transform", "translate(0,10)");
+
+            var y = d3.scaleLinear()
+                .range([300, 0])
+                .domain(domain.slice().reverse());
+
+            var yAxis = d3.axisBottom()
+                .scale(y)
+                .ticks(5);
+
+            key.append("g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(0,30)")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("axis title");
         };
 
     // Public interface
