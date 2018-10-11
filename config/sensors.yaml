@@ -4,19 +4,19 @@ sensors:
       name: School A
       start_date: 2018-10-06
       location:
-      latitude: 51.474708
-      longitude: -2.576841
+        latitude: 51.474708
+        longitude: -2.576841
 
     17316:
       name: School B
       start_date: 2018-10-06
       location:
-      latitude: 51.474708
-      longitude: -2.576841
+        latitude: 51.474708
+        longitude: -2.576841
 
     17318:
       name: School C
       start_date: 2018-10-06
       location:
-      latitude: 51.474708
-      longitude: -2.576841
+        latitude: 51.474708
+        longitude: -2.576841
