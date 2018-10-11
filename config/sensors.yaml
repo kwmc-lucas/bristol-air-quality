@@ -1,9 +1,22 @@
 sensors:
-    luftdaten:
-        7675:
-            name: St Werburghs - The Yard north
-            start_date: 2018-05-01
-            # start_date: 2017-12-10
-            location:
-                latitude: 51.474708
-                longitude: -2.576841
+  luftdaten:
+    17314:
+      name: School A
+      start_date: 2018-10-06
+      location:
+      latitude: 51.474708
+      longitude: -2.576841
+
+    17316:
+      name: School B
+      start_date: 2018-10-06
+      location:
+      latitude: 51.474708
+      longitude: -2.576841
+
+    17318:
+      name: School C
+      start_date: 2018-10-06
+      location:
+      latitude: 51.474708
+      longitude: -2.576841
