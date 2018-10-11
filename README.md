@@ -17,12 +17,24 @@ env/bin/pip install -r requirements.txt
 
 ## Configuring the sensors config file
 Edit the sensors.yaml file in the config directory to choose which sensors will be displayed.
-You will need to know your id numbers for your Luftdaten sensors.
+You will need to know your id numbers for your Luftdaten sensors. You will get your sensor
+id when you register your sensor on the Luftdaten site (https://luftdaten.info/en/construction-manual/).  
 
-There doesn't seem to be an easy way of finding out when a sensor first came online (for
-the start_date attribute), it will take some browsing of the 
-[Luftdaten archives](http://archive.luftdaten.info) to see when the a file
-first appeared for the sensor.
+You can use a script in this project to help find the first date a sensor came online. You'll
+need this for the 'start_date' attribute in you config file. Note the script samples dates from
+Luftdaten archives, so it might not find the true start date if the sensor data is intermittent.
+To run the script:
+
+```bash
+cd scripts
+
+# Substitute your sensor id for SENSOR_ID below
+../env/bin/python find_start_date.py SENSOR_ID
+```
+
+Alternatively you can find the start date by browsing the 
+[Luftdaten archives](http://archive.luftdaten.info) to see when the data files
+first appear for the sensor.
 
 Follow the format in the YAML file, copying and pasting to create more sensors:
 ```yaml

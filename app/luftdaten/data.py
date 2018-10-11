@@ -53,6 +53,7 @@ def find_start_date_for_sensor(sensor_code, earliest_date=None, latest_date=None
     :param latest_date: The latest date with data so far
     :param date_has_data_cache: Dict of dates to boolean to determine whether date has data
         (saves redundant calls to api)"""
+    first_pass = earliest_date is None and latest_date is None
     earliest_date = earliest_date or datetime.date(2015, 10, 1)
     latest_date = latest_date or datetime.date.today()
     date_has_data_cache = date_has_data_cache or {}
@@ -64,19 +65,31 @@ def find_start_date_for_sensor(sensor_code, earliest_date=None, latest_date=None
     days_diff = (latest_date - earliest_date).days
     # print("no", sensor_code, days_diff)
 
-    dates_to_check = []
+    dates_sample = set()
     if days_diff == 0:
-        dates_to_check.append(earliest_date)
+        dates_sample.add(earliest_date)
     if days_diff == 1:
-        dates_to_check.append(earliest_date)
-        dates_to_check.append(latest_date)
+        dates_sample.add(earliest_date)
+        dates_sample.add(latest_date)
     else:
-        for day_offset in range(0, days_diff, min(days_diff, int(days_diff / 5))):
-            dates_to_check.append(earliest_date + datetime.timedelta(days=day_offset))
-    if dates_to_check[-1] != latest_date:
-        dates_to_check.append(latest_date)
+        # Aim for at least one date a month
+        days_between_samples = min(int(days_diff / 3), 28)
+        step_size = min(days_diff, days_between_samples)
 
-    assert len(dates_to_check) == len(set(dates_to_check))
+        for day_offset in range(0, days_diff, max(step_size, 1)):
+            dates_sample.add(earliest_date + datetime.timedelta(days=day_offset))
+
+        # If this is the first run, include recent dates as the sensor may have only
+        # just come online
+        if first_pass:
+            for i in range(7):
+                dates_sample.add(
+                    datetime.date.today() - datetime.timedelta(days=i)
+                )
+
+        dates_sample.add(latest_date)
+
+    dates_to_check = sorted(list(dates_sample))
 
     date_has_data = {}
     for date_ in dates_to_check:
@@ -88,8 +101,6 @@ def find_start_date_for_sensor(sensor_code, earliest_date=None, latest_date=None
             response = requests.get(url)
             date_has_data[date_] = response.status_code < 400
             date_has_data_cache[date_] = date_has_data[date_]
-    # print(dates_to_check)
-    # print(date_has_data)
 
     if date_has_data[earliest_date]:
         # Earliest date has data, so we have our answer
