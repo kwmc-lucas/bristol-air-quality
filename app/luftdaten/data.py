@@ -97,9 +97,10 @@ def find_start_date_for_sensor(sensor_code, earliest_date=None, latest_date=None
             date_has_data[date_] = date_has_data_cache[date_]
         else:
             url = get_luftdaten_data_url(sensor_code, date_)
-            print("Checking {}".format(url))
             response = requests.get(url)
-            date_has_data[date_] = response.status_code < 400
+            has_data = response.status_code < 400
+            print("Url {} {}".format(url, 'has data' if has_data else 'no data'))
+            date_has_data[date_] = has_data
             date_has_data_cache[date_] = date_has_data[date_]
 
     if date_has_data[earliest_date]:
