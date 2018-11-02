@@ -38,9 +38,48 @@
 					The raw data for this site come from the Luftdaten data
 					archive http://archive.luftdaten.info
 				</p>
+
+				<h2>About Particulates</h2>
+				<p>
+					This site shows information about particulate air quality.
+					From wikipedia:
+				</p>
+				<p>
+					Particulate matter (PM) is microscopic solid or liquid matter
+					suspended in the atmosphere of Earth.
+					Sources of particulate matter can be natural or anthropogenic.
+					They have impacts on climate and precipitation that adversely affect human health.
+				</p>
+				<p>
+					The IARC and WHO designate airborne particulates a Group 1 carcinogen.
+					Particulates are the deadliest form of air pollution due to their ability to
+					penetrate deep into the lungs and blood streams unfiltered,
+					causing permanent DNA mutations, heart attacks, respiratory disease,
+					and premature death. In 2013, a study involving 312,944 people in nine
+					European countries revealed that there was no safe level of particulates
+					and that for every increase of 10 μg/m3 in PM10, the lung cancer rate rose 22%.
+					The smaller PM2.5 were particularly deadly, with a 36% increase in lung
+					cancer per 10 μg/m3 as it can penetrate deeper into the lungs.
+					Worldwide exposure to PM2.5 contributed to 4.1 million deaths from heart
+					disease and stroke, lung cancer, chronic lung disease, and respiratory
+					infections in 2016. Overall, ambient particulate matter ranks as the sixth
+					leading risk factor for premature death globally.
+				</p>
+				<div class="foot-notes">
+					<p>
+						Source: <a href="https://en.wikipedia.org/wiki/Particulates" target="_blank">Wikipedia</a>
+						(lightly edited for readability)
+					</p>
+				</div>
 			</div>
 
 			<div class="day-of-week page">
+
+				<!-- Value field (PM10 or PM2.5) -->
+				<select id="value-field-day-of-week" class="particulate-choice">
+					<option value="P2" selected="selected">Particulate size: PM2.5</option>
+					<option value="P1">Particulate size: PM10</option>
+				</select>
 
 				<!-- Drop downs -->
 				<div class="row">
@@ -92,9 +131,25 @@
 					<div id="info"></div>
 					<div id="day-of-week-legend"></div>
 				</div>
+
+				<div class="foot-notes">
+					<p>
+						Units: micrograms per metre cubed (µg/m3)
+						<br>
+						Source: <a href="http://archive.luftdaten.info/" target="_blank">http://archive.luftdaten.info/</a>
+						<br>
+						Colour range runs from zero to the
+						<a href="http://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health" target="_blank">WHO limit</a>
+					</p>
+				</div>
 			</div>
 
 			<div class="over-time page">
+				<!-- Value field (PM10 or PM2.5) -->
+				<select id="value-field-over-time" class="particulate-choice">
+					<option value="P2" selected="selected">Particulate size: PM2.5</option>
+					<option value="P1">Particulate size: PM10</option>
+				</select>
 
 				<!-- Drop downs -->
 				<div class="row">
@@ -133,11 +188,22 @@
 				<!-- Charts -->
 				<div class="row">
 					<div class="column">
-						<div id="twentyfour-hour-means-chart-1"></div>
+						<div class="twentyfour-hour-means" id="twentyfour-hour-means-chart-1"></div>
 					</div>
 					<div class="column">
-						<div id="twentyfour-hour-means-chart-2"></div>
+						<div class="twentyfour-hour-means" id="twentyfour-hour-means-chart-2"></div>
 					</div>
+				</div>
+
+				<div class="foot-notes">
+					<p>
+						Units: micrograms per metre cubed (µg/m3)
+						<br>
+						Source: <a href="http://archive.luftdaten.info/" target="_blank">http://archive.luftdaten.info/</a>
+						<br>
+						Red line indicates the
+						<a href="http://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health" target="_blank">WHO limit</a>
+					</p>
 				</div>
 			</div>
 
