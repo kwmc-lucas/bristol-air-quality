@@ -71,3 +71,12 @@ footer p {
 .center {
     /*text-align: center;*/
 }
+
+.particulate-choice {
+    /*font-size: 17px;*/
+    margin-bottom: 10px;
+}
+
+.foot-notes p {
+	font-size: 11px;
+}

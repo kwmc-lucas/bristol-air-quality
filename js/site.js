@@ -4,14 +4,18 @@
 // https://tutorialzine.com/2015/02/single-page-app-without-a-framework
 
 $(function () {
+    var defaultValueField = "P2",
+        euLimitPM10 = 50,
+        euLimitPM2point5 = 25;
 
-    function getSensorsHashFragment (elSensor1, elDate1, elSensor2, elDate2) {
+    function getSensorsHashFragment (elSensor1, elDate1, elSensor2, elDate2, elValueField) {
         // Get url type hash fragment to represent current
         // sensor selection state
         return "sensor1=" + $(elSensor1).val() +
             "&date1=" + $(elDate1).val() +
             "&sensor2=" + $(elSensor2).val() +
-            "&date2=" + $(elDate2).val();
+            "&date2=" + $(elDate2).val() +
+            "&valueField=" + $(elValueField).val() || defaultValueField;
     }
 
     function getDayOfWeekSensorsHashFragment () {
@@ -22,6 +26,7 @@ $(function () {
             '#sensor-date-day-of-week-1',
             '#sensor-code-day-of-week-2',
             '#sensor-date-day-of-week-2',
+            '#value-field-day-of-week'
         );
     }
 
@@ -33,6 +38,7 @@ $(function () {
             '#sensor-date-over-time-1',
             '#sensor-code-over-time-2',
             '#sensor-date-over-time-2',
+            '#value-field-over-time'
         );
     }
 
@@ -40,7 +46,7 @@ $(function () {
         let keyValuePairs = fragment.split('&'),
             // Defaults:
             store = {
-                valueField: "P1",
+                valueField: defaultValueField,
                 sensor1: null,
                 date1: null,
                 sensor2: null,
@@ -84,7 +90,8 @@ $(function () {
 
         $(
             '#sensor-code-day-of-week-1, #sensor-date-day-of-week-1, ' +
-            '#sensor-code-day-of-week-2, #sensor-date-day-of-week-2'
+            '#sensor-code-day-of-week-2, #sensor-date-day-of-week-2, ' +
+            '#value-field-day-of-week'
         ).change(function () {
             let hashFragment = getDayOfWeekSensorsHashFragment();
             window.location.hash = 'dayofweek/' + hashFragment;
@@ -92,7 +99,8 @@ $(function () {
 
         $(
             '#sensor-code-over-time-1, #sensor-date-over-time-1, ' +
-            '#sensor-code-over-time-2, #sensor-date-over-time-2'
+            '#sensor-code-over-time-2, #sensor-date-over-time-2, ' +
+            '#value-field-over-time'
         ).change(function () {
             let hashFragment = getOverTimeSensorsHashFragment();
             window.location.hash = 'overtime/' + hashFragment;
@@ -289,6 +297,10 @@ $(function () {
         });
     };
 
+    function getLimitValue(valueField) {
+        return valueField == "P1" ? euLimitPM10 : euLimitPM2point5
+    }
+
     function renderHomePage(){
         // Hides and shows products in the All Products Page depending on the data it receives.
         setPageTitle("Home");
@@ -313,6 +325,7 @@ $(function () {
     function renderDayOfWeekPage(configData, valueField, sensorCode1, date1, sensorCode2, date2) {
         setPageTitle("Best/worst times of the week");
         var page = $('.day-of-week'),
+            limitValue = getLimitValue(valueField),
             sensors = [
                 {
                     id: 1,
@@ -327,7 +340,10 @@ $(function () {
                     isActive: sensorCode2 && date2
                 }
             ],
-            domain = [0, 50];
+            domain = [0, limitValue];
+
+        // Value field
+        $('#value-field-day-of-week').val(valueField);
 
         // Populate drop downs
         $.each(sensors, function (i, sensor) {
@@ -348,7 +364,7 @@ $(function () {
             if (sensor.isActive) {
                 dateInfo = parseHyphenatedDate(sensor.date);
                 dataUrl = config.dayOfWeekDataUrl(configData, sensor.code, dateInfo.year, dateInfo.month);
-                luftviz.dayOfWeekCircular.render(chartEl, dataUrl, valueField);
+                luftviz.dayOfWeekCircular.render(chartEl, dataUrl, valueField, limitValue);
             } else {
                 $(chartEl).text('[Select sensor and date above]');
             }
@@ -386,6 +402,9 @@ $(function () {
                 }
             ];
 
+        // Value field
+        $('#value-field-over-time').val(valueField);
+
         // Populate drop downs
         $.each(sensors, function (i, sensor) {
             populateSensorAndDateDropDowns(
@@ -406,7 +425,6 @@ $(function () {
             if (sensor.isActive) {
                 dateInfo = parseHyphenatedDate(sensor.date);
                 dataUrl = config.twentyFourHourMeansDataUrl(configData, sensor.code, dateInfo.year, dateInfo.month);
-//                luftviz.chart24hourMean.render(chartEl, dataUrl, valueField);
                 queue.defer(d3.csv, dataUrl);
             } else {
                 $(chartEl).text('[Select sensor and date above]');
@@ -439,7 +457,6 @@ $(function () {
                     if (sensor.isActive) {
                         // Display chart
                         data = dataArgs.shift();
-//                        console.log("ARG", maxValue, chartEl, data, valueField);
                         luftviz.chart24hourMean.render(
                             chartEl,
                             data,

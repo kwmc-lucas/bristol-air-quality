@@ -1,7 +1,7 @@
 /* SVG styling */
 svg {
-	width: 400px;
-	height: 300px;
+	/*width: 400px;
+	height: 300px;*/
 
 	/*width: 960px;
 	height: 300px;*/
@@ -13,7 +13,12 @@ svg {
 	height: 400px;
 }
 .circle-chart svg {
+    width: 400px;
 	height: 400px;
+	/*height: 400px;*/
+}
+#day-of-week-legend svg {
+    width: 350px;
 }
 path {
 	stroke: #777;
