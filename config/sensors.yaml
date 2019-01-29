@@ -41,3 +41,10 @@ sensors:
       location:
         latitude: 51.461797
         longitude: -2.562962
+        
+    19615:
+      name: Bannerman School
+      start_date: 2018-12-23
+      location:
+        latitude: 51.4638
+        longitude: -2.5646              
