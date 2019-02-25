@@ -35,6 +35,13 @@ sensors:
         latitude: 51.464363
         longitude: -2.582494
 
+    19613:
+      name: St Paul's Adventure Playground
+      start_date: 2018-12-23
+      location:
+        latitude: 51.4649
+        longitude: -2.5776
+
     17506:
       name: Easton Community Centre
       start_date: 2018-10-14
