@@ -55,3 +55,31 @@ sensors:
       location:
         latitude: 51.4638
         longitude: -2.5646              
+
+    23644:
+      name: Albion Road
+      start_date: 2019-03-30
+      location:
+        latitude: 51.4658
+        longitude: -2.5643    
+        
+    23646:
+      name: May Park Primary School
+      start_date: 2019-04-03
+      location:
+        latitude: 51.47186
+        longitude: -2.55698  
+
+    23650:
+      name: Stapleton Road
+      start_date: 2019-03-30
+      location:
+        latitude: 51.47289
+        longitude: -2.56137    
+
+    23652:
+      name: Albert Parade
+      start_date: 2019-04-05
+      location:
+        latitude: 51.46071
+        longitude: -2.55532  
