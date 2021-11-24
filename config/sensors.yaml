@@ -15,7 +15,7 @@ sensors:
         longitude: -2.5858
 
     66970:
-      name: St Andrews Road
+      name: St. Andrews Road
       start_date: 2021-11-08
       location:
         latitude: 51.4667
@@ -28,9 +28,37 @@ sensors:
         latitude: 51.4665
         longitude: -2.5857
 
+    66974:
+      name: City Road (a)
+      start_date: 2021-11-08
+      location:
+        latitude: 51.4647
+        longitude: -2.5842
+
+    66979:
+      name: Horley Road
+      start_date: 2021-11-08
+      location:
+        latitude: 51.4679
+        longitude: -2.5730
+
     66987:
-      name: City Road
+      name: City Road (b)
       start_date: 2021-11-08
       location:
         latitude: 51.4630
         longitude: -2.5875
+
+    67568:
+      name: York Road
+      start_date: 2021-11-08
+      location:
+        latitude: 51.4678
+        longitude: -2.5845
+
+    67665:
+      name: St. Werburgh's Park
+      start_date: 2021-11-08
+      location:
+        latitude: 51.4714
+        longitude: -2.5732
