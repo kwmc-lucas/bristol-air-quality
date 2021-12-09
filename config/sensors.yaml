@@ -56,6 +56,13 @@ sensors:
         latitude: 51.4678
         longitude: -2.5845
 
+    67655:
+      name: City Road (c)
+      start_date: 2021-11-08
+      location:
+        latitude: 51.4650
+        longitude: -2.5840
+
     67665:
       name: St. Werburgh's Park
       start_date: 2021-11-08
