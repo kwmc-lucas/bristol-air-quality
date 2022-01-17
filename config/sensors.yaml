@@ -1,21 +1,21 @@
 sensors:
   luftdaten:
     66963:
-      name: The Yard
+      name: The Yard (Stephen)
       start_date: 2021-11-08
       location:
         latitude: 51.4748
         longitude: -2.5762
 
     66966:
-      name: Richmond Road
+      name: Richmond Road (Colin)
       start_date: 2021-11-08
       location:
         latitude: 51.4680
         longitude: -2.5858
 
     66970:
-      name: St. Andrews Road
+      name: St. Andrews Road (Alan)
       start_date: 2021-11-08
       location:
         latitude: 51.4667
@@ -29,35 +29,35 @@ sensors:
         longitude: -2.5857
 
     66974:
-      name: City Road (a)
+      name: City Road c/o Brigstoke Road (Helmut)
       start_date: 2021-11-08
       location:
         latitude: 51.4647
         longitude: -2.5842
 
     66979:
-      name: Horley Road
+      name: Horley Road (Ruth)
       start_date: 2021-11-08
       location:
         latitude: 51.4679
         longitude: -2.5730
 
     66987:
-      name: City Road (b)
+      name: City Road c/o Brigstoke Road
       start_date: 2021-11-08
       location:
         latitude: 51.4630
         longitude: -2.5875
 
     67568:
-      name: York Road
+      name: York Road (Felix the Kat)
       start_date: 2021-11-08
       location:
         latitude: 51.4678
         longitude: -2.5845
 
     67655:
-      name: City Road (c)
+      name: City Road (Malcolm X)
       start_date: 2021-11-08
       location:
         latitude: 51.4650
