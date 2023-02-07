@@ -69,10 +69,3 @@ sensors:
       location:
         latitude: 51.4714
         longitude: -2.5732
-        
-    7675:
-      name: The Yard (North)
-      start_date: 2017-12-10
-      location:
-        latitude: 51.474708
-        longitude: -2.576841
